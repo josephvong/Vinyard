@@ -4,6 +4,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import appstore from './vuex/appstore'
 
 /*-------三种方法 使用ajax 发送请求---------*/
 // vux 内置的 基于 axios 的ajax 处理插件 ，如果使用vux可以直接使用
@@ -35,13 +36,14 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   router,
+  store:appstore,
   render:h=>h(App,{}),
   mounted(){
   	// 使用 axios 异步获取数据
   	router.push({"path":"/"});
-  	axios.get("http://m.9kacha.com/activity/G100/api/Select_sCount_ActWine.php?page_now=1&randomTime=123")
+  	/*axios.get("http://m.9kacha.com/activity/G100/api/Select_sCount_ActWine.php?page_now=1&randomTime=123")
   		.then(function(response){
   			console.log(response);
-  		})
+  		})*/
   }
 }).$mount("#app")

@@ -1,13 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import frontPage from '../components/frontPage/frontPage.vue'
-
+import home from '../components/home/home.vue'
+import caseGroup from '../components/casegroup/caseGroup.vue'
+import todos from '../components/casegroup/todos/todos.vue'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/', name: 'Hello', component: frontPage
+      path: '/', name: 'home', component: home
+    },
+    {
+    	path: '/casegroup', name: 'casegroup', component: caseGroup
+    },
+    {
+    	path: '/casegroup/todos',name:'todos',component:todos
     }
   ]
 })

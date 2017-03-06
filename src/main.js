@@ -25,6 +25,8 @@ import FastClick from 'fastclick'
 FastClick.attach(document.body)
 /*--------------点击延时------------------*/
 
+
+
 /*------全局公用函数--------
 	如果有某些自定义工具函数可以挂在到全局Vue实例里面
 		Vue.prototype.fnName = function(){.....} //在Vue 实例的prototype中定义

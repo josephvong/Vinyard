@@ -5,22 +5,41 @@
         <swipeout-item  :threshold="0.5" :sensitivity="15" v-for="item in todoList"
           v-bind:key="item.eventID">
           <div slot="right-menu">
-            <swipeout-button @click.native="" type="primary">完成</swipeout-button>
-            <swipeout-button @click.native="" type="warn">删除</swipeout-button>
+            <swipeout-button type="primary"  @click.native="completeHandle(item.eventID)" >完成</swipeout-button>
+            <swipeout-button type="warn" @click.native="deleteHandle(item.eventID)">删除</swipeout-button>
           </div>
           <div slot="content" class="list-content" >
-             {{item.title}} <span>{{item.eventTime}}</span>
+            <a @click="selContOpen(item.eventID)"> {{item.title}} </a> <span>{{item.eventTime}}</span>
           </div>
         </swipeout-item>
       </swipeout>
     </div>
     <div class="list-wrap complete-list" v-show="tabState==1" >
-
-      <p v-for="i in 10">{{i}}</p>
-
+      <swipeout>
+        <swipeout-item  :threshold="0.5" :sensitivity="15" v-for="item in completeList"
+          v-bind:key="item.eventID">
+          <div slot="right-menu">
+            <swipeout-button type="primary"  @click.native="todoHandle(item.eventID)" >撤回</swipeout-button>
+            <swipeout-button type="warn" @click.native="deleteHandle(item.eventID)">删除</swipeout-button>
+          </div>
+          <div slot="content" class="list-content" >
+             <a @click="selContOpen(item.eventID)"> {{item.title}} </a> <span>{{item.eventTime}}</span>
+          </div>
+        </swipeout-item>
+      </swipeout>
     </div>
     <div class="list-wrap cancel-list" v-show="tabState==2">
-      <p v-for="i in 30">{{i}}</p>
+      <swipeout>
+        <swipeout-item  :threshold="0.5" :sensitivity="15" v-for="item in deleteList"
+          v-bind:key="item.eventID">
+          <div slot="right-menu">
+            <swipeout-button type="primary"  @click.native="todoHandle(item.eventID)" >重建</swipeout-button>
+          </div>
+          <div slot="content" class="list-content" >
+             <a @click="selContOpen(item.eventID)"> {{item.title}} </a> <span>{{item.eventTime}}</span>
+          </div>
+        </swipeout-item>
+      </swipeout>
     </div>
   </div>
 </template>
@@ -37,27 +56,35 @@ export default {
     todoList:{
       type:Array,
       default:[]
+    },
+    completeList:{
+      type:Array,
+      default:[]
+    },
+    deleteList:{
+      type:Array,
+      default:[]
     }
-  },
-  methods:{
-
   },
   components:{
     Swipeout, SwipeoutItem, SwipeoutButton
   },
-  watch:{
-    tabState(New,Old){
-      //console.log(New);
-      /*if(New==0){
-        this.$nextTick(() => { this.$refs.scrol0.reset() })
-      }else if(New==1){
-        this.$nextTick(() => { this.$refs.scrol1.reset() })
-      }else if(New==2){
-        this.$nextTick(() => { this.$refs.scrol2.reset() })
-      }*/
+  methods:{
+    completeHandle (id) {
+      this.$store.dispatch("todoSetComplete",id);
+    },
+    deleteHandle (id) {
+      this.$store.dispatch("todoSetDelete",id);
+    },
+    todoHandle (id) {
+      this.$store.dispatch("todoSetTodo",id);
+    },
+    selContOpen(id){
+      this.$store.dispatch("todoSelContShowOpen",id);
     }
   },
   mounted(){
+
   }
 }
 </script>
@@ -73,7 +100,13 @@ export default {
       height:2rem
       line-height:2rem
       padding: 0 0.8rem
-      span
+      &>a
+        display:inline-block
+        padding:0 0.3rem
+        color:blue
+        text-decoration:underline
+        border-bottom:1px solid red
+      &>span
         float:right
         padding-left:0.8rem
         font-size: 0.6rem

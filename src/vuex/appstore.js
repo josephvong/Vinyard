@@ -63,7 +63,7 @@ const todoModule={
 		},
 		todoSaveEvent(state,obj){
 			let arr= state.eventList;
-			arr.push(obj);
+			arr.unshift(obj);
 			state.eventList=arr;
 			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
@@ -73,6 +73,9 @@ const todoModule={
 					Object.assign(item,{status:1,eventID:obj.newID});
 			 	}
 			})
+			_.sortBy(state.eventList,function(item){
+         return  -item.eventID
+      })
 
 			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
@@ -82,6 +85,9 @@ const todoModule={
 					Object.assign(item,{status:2,eventID:obj.newID});
 			 	}
 			})
+			_.sortBy(state.eventList,function(item){
+         return  -item.eventID
+      })
 			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
 		todoSetTodo(state,obj){  // 设置为未做
@@ -90,6 +96,9 @@ const todoModule={
 					Object.assign(item,{status:0,eventID:obj.newID});
 			 	}
 			})
+			_.sortBy(state.eventList,function(item){
+         return  -item.eventID
+      })
 			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
 		todoSelContShowOpen(state,id){  // 打开popUp

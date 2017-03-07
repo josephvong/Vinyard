@@ -70,14 +70,29 @@ export default {
     Swipeout, SwipeoutItem, SwipeoutButton
   },
   methods:{
-    completeHandle (id) {
-      this.$store.dispatch("todoSetComplete",id);
+    completeHandle (id) {//id
+      let oDate=new Date();
+      let obj={
+        eventID:id,
+        newID:oDate.getTime()
+      }
+      this.$store.dispatch("todoSetComplete",obj);
     },
     deleteHandle (id) {
-      this.$store.dispatch("todoSetDelete",id);
+      let oDate=new Date();
+      let obj={
+        eventID:id,
+        newID:oDate.getTime()
+      }
+      this.$store.dispatch("todoSetDelete",obj);
     },
     todoHandle (id) {
-      this.$store.dispatch("todoSetTodo",id);
+      let oDate=new Date();
+      let obj={
+        eventID:id,
+        newID:oDate.getTime()
+      }
+      this.$store.dispatch("todoSetTodo",obj);
     },
     selContOpen(id){
       this.$store.dispatch("todoSelContShowOpen",id);

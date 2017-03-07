@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import {mapState , mapMutations } from 'vuex'
 import todoBody from "./todoBody"
 import {  Group, XInput,XTextarea ,Flexbox,FlexboxItem,XButton,Tab,TabItem,Popup ,dateFormat  } from 'vux'
@@ -71,13 +72,19 @@ export default {
       return this.$store.state.todoM.tabState
     },
     todoList(){
-      return this.$store.getters.todoList
+      return _.sortBy(this.$store.getters.todoList,function(item){
+         return  -item.eventID
+      })
     },
     completeList(){
-      return this.$store.getters.completeList
+      return _.sortBy(this.$store.getters.completeList,function(item){
+         return  -item.eventID
+      })
     },
     deleteList(){
-      return this.$store.getters.deleteList
+      return _.sortBy(this.$store.getters.deleteList,function(item){
+         return  -item.eventID
+      })
     },
     selContShow(){
       return this.$store.state.todoM.selContShow
@@ -114,7 +121,7 @@ export default {
     }
   },
   mounted(){
-    //console.log(this.$store.getters);
+    //console.log(_.sortBy());
   }
 }
 </script>

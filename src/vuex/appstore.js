@@ -16,9 +16,14 @@ const todoModule={
       "content":null,
       eventID:null,
       eventTime:null,
-      status:null
+      status:null,
+      completeTime:null,
+      deleteTime:null
 		},
 		eventList:JSON.parse(window.localStorage.getItem("eventList"))||[],
+		// todoList:[],
+		// completeList:[],
+		// deleteList:[]
 	},
 	getters:{
 		todoList(state){
@@ -60,31 +65,32 @@ const todoModule={
 			let arr= state.eventList;
 			arr.push(obj);
 			state.eventList=arr;
-			window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
-		todoSetComplete(state,id){ // 设置为已做
+		todoSetComplete(state,obj){ // 设置为已做
 			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==id){
-					Object.assign(item,{status:1});
+			 	if(item.eventID==obj.eventID){
+					Object.assign(item,{status:1,eventID:obj.newID});
 			 	}
 			})
-			window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+
+			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
-		todoSetDelete(state,id){ // 设置为删除
+		todoSetDelete(state,obj){ // 设置为删除
 			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==id){
-					Object.assign(item,{status:2});
+			 	if(item.eventID==obj.eventID){
+					Object.assign(item,{status:2,eventID:obj.newID});
 			 	}
 			})
-			window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
-		todoSetTodo(state,id){  // 设置为未做
+		todoSetTodo(state,obj){  // 设置为未做
 			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==id){
-					Object.assign(item,{status:0});
+			 	if(item.eventID==obj.eventID){
+					Object.assign(item,{status:0,eventID:obj.newID});
 			 	}
 			})
-			window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
 		},
 		todoSelContShowOpen(state,id){  // 打开popUp
 			let aList=window.localStorage.getItem("eventList");
@@ -92,7 +98,6 @@ const todoModule={
 			state.selContShow=true;
 			state.eventList.forEach(function(item,index){
 			 	if(item.eventID==id){
-					//console.log(item);
 					state.selectedItem=item;
 			 	}
 			})
@@ -108,14 +113,14 @@ const todoModule={
 		todoSaveEvent(context,obj){
 			context.commit('todoSaveEvent',obj)
 		},
-		todoSetComplete(context,id){
-			context.commit('todoSetComplete',id)
+		todoSetComplete(context,obj){
+			context.commit('todoSetComplete',obj)
 		},
-		todoSetDelete(context,id){
-			context.commit('todoSetDelete',id)
+		todoSetDelete(context,obj){
+			context.commit('todoSetDelete',obj)
 		},
-		todoSetTodo(context,id){
-			context.commit('todoSetTodo',id)
+		todoSetTodo(context,obj){
+			context.commit('todoSetTodo',obj)
 		},
 		todoSelContShowOpen(context,id){
 			context.commit('todoSelContShowOpen',id)

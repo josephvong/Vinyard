@@ -4,150 +4,93 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-
 Vue.use(Vuex)
 
-const todoModule={
+const selectModule={
 	state:{
-		tabState:0, // tab 的显示状态，0/1/2
-		selContShow:false,
-		selectedItem:{
-			"title":null,
-      "content":null,
-      eventID:null,
-      eventTime:null,
-      status:null,
-      completeTime:null,
-      deleteTime:null
-		},
-		eventList:JSON.parse(window.localStorage.getItem("eventList"))||[],
-		// todoList:[],
-		// completeList:[],
-		// deleteList:[]
+		isShowBanner:true,
+		selectedArr:[
+			/*{catalogName:"district",tId:"卡拉布里亚"},
+			{catalogName:"winetype",tId:"红葡萄酒"},
+			{catalogName:"grapetype",tId:"赤霞珠"},*/
+		],
+		/*jparmas:{
+			"authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
+		},*/
+		resultListArr:[] // 结果列表
 	},
 	getters:{
-		todoList(state){
-			let newList=state.eventList.filter(function(item){
-				return item.status == 0
-			})
-			if(newList.length==0){
-				return [];
-			}else{
-				return newList;
-			}
-		},
-		completeList(state){
-			let newList=state.eventList.filter(function(item){
-				return item.status == 1
-			})
-			if(newList.length==0){
-				return [];
-			}else{
-				return newList;
-			}
-		},
-		deleteList(state){
-			let newList=state.eventList.filter(function(item){
-				return item.status == 2
-			})
-			if(newList.length==0){
-				return [];
-			}else{
-				return newList;
-			}
-		},
+
 	},
 	mutations:{
-		todoTabChange(state,num){
-			state.tabState=num;
+		cleanSelectedArr(state){
+			state.selectedArr=[];  // 清空数组
+			//console.log(state.selectedArr);
 		},
-		todoSaveEvent(state,obj){
-			let arr= state.eventList;
-			arr.unshift(obj);
-			state.eventList=arr;
-			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+		singleSelectedArr(state,obj){ // 单一标签选择
+			state.selectedArr.push(obj)
 		},
-		todoSetComplete(state,obj){ // 设置为已做
-			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==obj.eventID){
-					Object.assign(item,{status:1,eventID:obj.newID});
-			 	}
-			})
-			_.sortBy(state.eventList,function(item){
-         return  -item.eventID
-      })
-
-			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+		modifySelectedArr(state,obj){
+			function checkType(obj,arr){
+				let flag=false;
+				arr.forEach((item,index)=>{
+					if(item.catalogName==obj.catalogName){
+						flag=true;
+						return
+					}
+				})
+				return flag  //判断选中标签是否有同类存在
+			}
+			if(checkType(obj,state.selectedArr)){  // 有对应类型的标签已经存在
+				state.selectedArr.forEach((item,index)=>{
+					if(item.catalogName==obj.catalogName){
+						if(item.tId!=obj.tId){
+							item.tId=obj.tId
+						}
+					}
+				})
+			}else{
+				state.selectedArr.push(obj);
+			}
 		},
-		todoSetDelete(state,obj){ // 设置为删除
-			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==obj.eventID){
-					Object.assign(item,{status:2,eventID:obj.newID});
-			 	}
-			})
-			_.sortBy(state.eventList,function(item){
-         return  -item.eventID
-      })
-			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
+		addResultListArr(state,arr){
+			console.log(arr);
+			let newArr=state.resultListArr.concat(arr);
+			state.resultListArr=newArr
 		},
-		todoSetTodo(state,obj){  // 设置为未做
-			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==obj.eventID){
-					Object.assign(item,{status:0,eventID:obj.newID});
-			 	}
-			})
-			_.sortBy(state.eventList,function(item){
-         return  -item.eventID
-      })
-			//window.localStorage.setItem("eventList", JSON.stringify(state.eventList));
-		},
-		todoSelContShowOpen(state,id){  // 打开popUp
-			let aList=window.localStorage.getItem("eventList");
-			console.log(aList);
-			state.selContShow=true;
-			state.eventList.forEach(function(item,index){
-			 	if(item.eventID==id){
-					state.selectedItem=item;
-			 	}
-			})
-		},
-		todoSelContShowClose(state){  // 关闭popUp
-			state.selContShow=false
+		cleanResultListArr(state){
+			//window.LocalStorage.clearItem()
+			state.resultListArr=[]
 		}
 	},
 	actions:{
-		todoTabChange(context,num){
-			context.commit('todoTabChange',num)
+		cleanSelectedArr(context){
+			context.commit('cleanSelectedArr')
 		},
-		todoSaveEvent(context,obj){
-			context.commit('todoSaveEvent',obj)
+		singleSelectedArr(context,obj){  //CTag 的单选 动作
+			context.commit('singleSelectedArr',obj)
 		},
-		todoSetComplete(context,obj){
-			context.commit('todoSetComplete',obj)
+		modifySelectedArr(context,obj){
+			context.commit('modifySelectedArr',obj)
 		},
-		todoSetDelete(context,obj){
-			context.commit('todoSetDelete',obj)
+		addResultListArr(context,arr){
+			//console.log(arr);
+			context.commit('addResultListArr',arr)
 		},
-		todoSetTodo(context,obj){
-			context.commit('todoSetTodo',obj)
-		},
-		todoSelContShowOpen(context,id){
-			context.commit('todoSelContShowOpen',id)
-		},
-		todoSelContShowClose(context){
-			context.commit('todoSelContShowClose')
+		cleanResultListArr(context){  //
+			context.commit('cleanResultListArr')
 		}
+
 	}
 }
 
 let store =new Vuex.Store({
    modules:{
-   		todoM:todoModule
+   		selectM:selectModule
    },
 
 })
 
 export default store
-
 
 

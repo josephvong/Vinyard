@@ -33,7 +33,7 @@ time, mark, audio, video, input {
 @media screen and (min-width:800px){html{font-size:25px}}*/
 
 /*SUI 的 字体 rem 设置参考*/
-html {
+/*html {
   font-size: 20px;
 }
 @media only screen and (min-width: 400px) {
@@ -50,7 +50,7 @@ html {
   html {
     font-size: 25.6px !important;
   }
-}
+}*/
 
 
 

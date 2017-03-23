@@ -1,9 +1,21 @@
 <template>
   <div class="tag-header-wrap">
   <div class="header clearfix" ref="tagHeader">
-    <span v-show="selectedObj.district" class="top-tag">{{selectedObj.district}}<strong class="close">x</strong></span>
-    <span v-show="selectedObj.winetype" class="top-tag">{{selectedObj.winetype}}<strong class="close">x</strong></span>
-    <span v-show="selectedObj.grapetype" class="top-tag">{{selectedObj.grapetype}}<strong class="close">x</strong></span>
+    <span v-show="selectedObj.district" class="top-tag" v-bind:tId="selectedObj.district"
+          v-on:click="tagClickHandle('district')" 
+    >
+      {{selectedObj.district}}<strong class="close">x</strong>
+    </span>
+    <span v-show="selectedObj.winetype" class="top-tag" v-bind:tId="selectedObj.winetype"
+          v-on:click="tagClickHandle('winetype')"
+    >
+      {{selectedObj.winetype}}<strong class="close">x</strong>
+    </span>
+    <span v-show="selectedObj.grapetype" class="top-tag" v-bind:tId="selectedObj.grapetype"
+           v-on:click="tagClickHandle('grapetype')"
+    >
+      {{selectedObj.grapetype}}<strong class="close">x</strong>
+    </span>
   </div>
 </div>
 
@@ -35,8 +47,11 @@ export default {
       let HeadHeight = $(this.$refs.tagHeader).outerHeight();
       this.$nextTick(()=>{
         this.eventHub.$emit("fixedHeader",HeadHeight);
-      })
+      }) 
+    },
 
+    tagClickHandle(catName){
+      console.log(catName);
     }
   },
   components:{

@@ -2,13 +2,13 @@
   <div class="result" ref="resultPage">
     <TagHead v-bind:selectedObj="selectedObj" v-bind:eventHub="eventHub"></TagHead>
     <div class="list-wrap">
-      <div class="no-result" v-show="isNoResult" >没有对应酒款</div>
+      
       <ul class="result-list">
         <ListItem v-for="(item,index) in resultList" v-bind:infoObj="item" v-bind:key="index">
         </ListItem>
       </ul>
-      <div class="add-more" v-show="!isNoMore">正在加载中...</div>
-      <div class="no-more" style="display:none">加载完成</div>
+      <div class="no-result" v-show="isNoResult" >没有更多酒款</div>
+      <div class="add-more" v-show="!isNoMore">正在加载中...</div> 
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
         "authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
         "authmode":"app",
         "country":"意大利",
-        "cookie":window.localStorage.getItem("userCookie")
+        "cookie":"940158d239561338e"//window.localStorage.getItem("userCookie")
       },
       eventHub:new Vue()
 
@@ -46,32 +46,48 @@ export default {
 
   },
   methods:{
-    dataLoad(obj,page){ // 加载数据
+    // 加载数据
+    dataLoad(obj,page){ 
       let newObj={};
       newObj.region=obj.district||"0";
       newObj.wine_type=obj.winetype||"0";
       newObj.grape=obj.grapetype||"0";
       let JParams = $.extend({},this.staticData,newObj,{"page":page});
-
       $.ajax({
         url:'http://zyshi.9kacha.com/AutoRecommWines/toBfindWine/findWine.php',
         type:'POST',
         data:{'jparams':JSON.stringify(JParams) },
         success:(data)=>{
+          this.stopScrollRequest=false; // 关闭开关
           var res = JSON.parse(data);
           this.getDataCb(res,page);
+        },
+        error:(err)=>{
+          this.isNoResult=true //没有数据
+          console.log(err);
         }
       });
     },
-    getDataCb(res,page){ // 获取数据的回调
+
+    // 获取数据的回调
+    getDataCb(res,page){
       if(res.description=="ok"){
-        let newArr=this.resultList
-        this.resultList=newArr.concat(res.jsonData);
+        if(res.jsonData.length>0){
+          let newArr=this.resultList
+          this.resultList=newArr.concat(res.jsonData);
+          if(res.jsonData.length<10){
+            this.isNoMore=true  // 已经结束
+          }
+        } 
       }else{
-        this.isNoResult=true
+        this.isNoResult=true // 没有数据
       }
     },
-    fixedHeader(num){ // 调整页面padding-top 的函数
+
+    // 调整标签刷新
+
+    // 调整页面padding-top 的函数
+    fixedHeader(num){ 
       $(this.$refs.resultPage).css("padding-top",num)
     }
   },
@@ -79,7 +95,7 @@ export default {
     TagHead, ListItem
   },
   mounted(){
-    window.localStorage.removeItem("selectedObj") ; // 获取数据后 清除页面
+    //window.localStorage.removeItem("selectedObj") ; // 获取数据后 清除页面
     this.eventHub.$on("fixedHeader",(num)=>{  // 监听 tag-header 组建传过来的高度，
       this.fixedHeader(num)   //执行padding-top 的调整函数
     });
@@ -91,8 +107,13 @@ export default {
       let bodyHeight = $("body").outerHeight();
       let overTop=bodyHeight-viewHeight; // >0 or not
       let btmHeight=overTop-$(window).scrollTop();
-      if(btmHeight<= 0)
-      console.log(btmHeight)
+      if(btmHeight<= 0){
+        if(!this.stopScrollRequest){
+          this.stopScrollRequest=true;
+          this.pageIndex+=1;
+          this.dataLoad(this.selectedObj,this.pageIndex);  
+        }
+      } 
     })
   }
 }

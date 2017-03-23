@@ -3,83 +3,90 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import $ from 'jquery'
 
 Vue.use(Vuex)
 
+const staticData={
+	"authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
+  "authmode":"app",
+  "country":"意大利",
+  "cookie":"940158d239561338e"
+}
+
 const selectModule={
 	state:{
-		isShowBanner:true,
-		selectedArr:[
-			/*{catalogName:"district",tId:"卡拉布里亚"},
-			{catalogName:"winetype",tId:"红葡萄酒"},
-			{catalogName:"grapetype",tId:"赤霞珠"},*/
-		],
-		/*jparmas:{
-			"authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
-		},*/
+		district:null,
+		winetype:null,
+		grapetype:null,
 		resultListArr:[] // 结果列表
 	},
 	getters:{
 
 	},
 	mutations:{
-		cleanSelectedArr(state){
-			state.selectedArr=[];  // 清空数组
-			//console.log(state.selectedArr);
-		},
-		singleSelectedArr(state,obj){ // 单一标签选择
-			state.selectedArr.push(obj)
-		},
-		modifySelectedArr(state,obj){
-			function checkType(obj,arr){
-				let flag=false;
-				arr.forEach((item,index)=>{
-					if(item.catalogName==obj.catalogName){
-						flag=true;
-						return
-					}
-				})
-				return flag  //判断选中标签是否有同类存在
-			}
-			if(checkType(obj,state.selectedArr)){  // 有对应类型的标签已经存在
-				state.selectedArr.forEach((item,index)=>{
-					if(item.catalogName==obj.catalogName){
-						if(item.tId!=obj.tId){
-							item.tId=obj.tId
-						}
-					}
-				})
+		modifyStateType(state,obj){
+			if(state[obj.catalogName]==obj.tId){
+				state[obj.catalogName] = null
 			}else{
-				state.selectedArr.push(obj);
+				state[obj.catalogName] = obj.tId
 			}
 		},
-		addResultListArr(state,arr){
-			console.log(arr);
-			let newArr=state.resultListArr.concat(arr);
-			state.resultListArr=newArr
+		selectStateType(state,obj){
+			console.log(obj);
+
 		},
-		cleanResultListArr(state){
-			//window.LocalStorage.clearItem()
-			state.resultListArr=[]
+		resetStateType(state){   // 重置
+			state.district=null;
+			state.winetype=null;
+			state.grapetype=null;
+		},
+		cleanStateList(state){
+			if(state.resultListArr.length){
+				state.resultListArr = [];
+			}
+		},
+		pushStateList(state,arr){
+			let newArr=state.resultListArr
+			state.resultListArr=newArr.concat(arr);
+			//console.log(state.resultListArr)
 		}
+
+
 	},
 	actions:{
-		cleanSelectedArr(context){
-			context.commit('cleanSelectedArr')
+		modifyStateType(context,obj){
+			context.commit('modifyStateType',obj)
 		},
-		singleSelectedArr(context,obj){  //CTag 的单选 动作
-			context.commit('singleSelectedArr',obj)
+		selectStateType(context,obj){
+			context.commit('resetStateType')
+			context.commit('modifyStateType',obj)
+			//context.commit('selectStateType',obj)
 		},
-		modifySelectedArr(context,obj){
-			context.commit('modifySelectedArr',obj)
+		resetStateType(context){  // 重置
+			context.commit('resetStateType')
 		},
-		addResultListArr(context,arr){
-			//console.log(arr);
-			context.commit('addResultListArr',arr)
+		refreshStateList(context,obj){
+			context.commit('cleanStateList');
+			let newObj={};
+			newObj.region=obj.district||"0";
+			newObj.wine_type=obj.winetype||"0";
+			newObj.grape=obj.grapetype||"0";
+			let JParams = $.extend({},staticData,newObj);
+			$.ajax({
+				url:'http://zyshi.9kacha.com/AutoRecommWines/toBfindWine/findWine.php',
+    		type:'POST',
+    		data:{'jparams':JSON.stringify(JParams) },
+    		success:function(data){
+    			var res = JSON.parse(data);
+    			if(res.description=="ok"){
+    				//console.log(res.jsonData);
+    				context.commit("pushStateList",res.jsonData)
+    			}
+    		}
+			});
 		},
-		cleanResultListArr(context){  //
-			context.commit('cleanResultListArr')
-		}
+		//addStateList()
 
 	}
 }

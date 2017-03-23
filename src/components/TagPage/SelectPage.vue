@@ -1,8 +1,10 @@
 <template>
   <div class="select-page">
-    <Selection catalogName="district"  ></Selection>
-    <Selection catalogName="winetype"  ></Selection>
-    <Selection catalogName="grapetype"  ></Selection>
+    <Banner></Banner>
+    <Taglist catalogName="district" :isExpress=true v-bind:selectId="selectObj.district"></Taglist>
+    <Taglist catalogName="winetype" :isExpress=true v-bind:selectId="selectObj.winetype"></Taglist>
+    <Taglist catalogName="grapetype" :isExpress=true v-bind:selectId="selectObj.grapetype"></Taglist>
+
     <div class="footer-wrap" style="display:block;">
       <div class="footer clearfix">
           <router-link class="btn" to="/Result">提交</router-link>
@@ -13,7 +15,9 @@
 </template>
 
 <script>
-import Selection from '../Catalog/Selection.vue'
+import Banner from "../Banner/Banner.vue"
+import Taglist from '../Taglist/Taglist.vue'
+import $ from 'jquery'
 export default {
   name: 'selectpage',
   data(){
@@ -22,20 +26,29 @@ export default {
     }
   },
   computed:{
-
+    selectObj(){
+      let obj={};
+      obj.district = this.$store.state.selectM.district;
+      obj.winetype = this.$store.state.selectM.winetype;
+      obj.grapetype = this.$store.state.selectM.grapetype;
+      return obj
+    }
 
   },
   methods:{
     ResetClickHandle(){
-      this.$store.dispatch("cleanSelectedArr");
+      this.$store.dispatch("resetStateType")
     }
   },
   components:{
-    Selection
+    Banner,Taglist
   },
   mounted(){
-    this.$store.dispatch("cleanResultListArr"); // 清空结果数组
-   // console.log(this.district)
+    $(window).scroll(function(){
+      return false
+    })
+    //console.log(this.$store.state.district);
+    //console.log(this.selectObj)
   }
 }
 </script>
@@ -43,9 +56,9 @@ export default {
 <style scpoed rel="stylesheet/css">
 .select-page{
   width:100%;
-  max-width:100%;
-  padding:1rem;
+  padding:8rem 0;
 }
+
 .footer-wrap{
   position: fixed;
   bottom:0;left:0;

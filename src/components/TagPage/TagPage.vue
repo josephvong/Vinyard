@@ -1,16 +1,15 @@
 <template>
   <div class="tag-page">
-    <Catalog v-bind:catalogName="catalogName"></Catalog>
+   <Banner ></Banner>
+   <Taglist v-bind:catalogName="catalogName" :isExpress=false ></Taglist>
   </div>
 </template>
 
 <script>
-import Catalog from '../Catalog/Catalog.vue'
+import Banner from "../Banner/Banner.vue"
+import Taglist from '../Taglist/Taglist.vue'
 export default {
   name: 'tagpage',
-  /*props:{
-
-  },*/
   data(){
     return {
 
@@ -22,11 +21,10 @@ export default {
     }
   },
   components:{
-    Catalog
+    Banner,Taglist
   },
   mounted(){
-    this.$store.dispatch("cleanSelectedArr")// 每次进入 单个选项入口页，清空已选项目
-    this.$store.dispatch("cleanResultListArr") // 清空结果数组
+
   }
 }
 </script>
@@ -34,7 +32,6 @@ export default {
 <style scpoed rel="stylesheet/css">
 .tag-page{
   width:100%;
-  max-width:100%;
-  padding:1rem;
+  padding:8rem 0;
 }
 </style>

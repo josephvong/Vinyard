@@ -11,8 +11,8 @@
         <p class="e-name">{{infoObj.name_en}}</p>
         <p class="rigion">
           <span class="country">{{infoObj.country_ch}}</span> >
-          <span class="main-reg">{{infoObj.region_ch}}</span> >
-          <span class="sub-reg">{{infoObj.sub_region_ch}}</span> >
+          <span class="main-reg">{{infoObj.region_ch}}</span>
+          <span class="sub-reg" v-show="infoObj.sub_region_ch"> > {{infoObj.sub_region_ch}}</span>
         </p>
         <p class="type">
           {{infoObj.wine_type_ch}} | {{infoObj.sugar_ch}}
@@ -24,8 +24,8 @@
       </div>
     </div>
     <div class="btn-wrap clearfix">
-      <a class="contact" href="http://www.baidu.com">联系酒庄</a>
-      <a class="detail">酒款详情</a>
+      <a class="contact" v-bind:link="infoObj.winery_url" v-on:click="wineryClickHandle()">联系酒庄</a>
+      <a class="detail" v-bind:wine_id="infoObj.wine_id" v-bind:sign="infoObj.sign" v-on:click="detailClickHandle()">酒款详情</a>
     </div>
   </li>
 </template>
@@ -46,7 +46,15 @@ export default {
 
   },
   methods:{
-
+    wineryClickHandle(){
+      let link = event.target.getAttribute("link");
+      window.open(link)
+    },
+    detailClickHandle(){
+      let wine_id = event.target.getAttribute("wine_id");
+      let sign = event.target.getAttribute("sign");
+      window.open('http://h5.9kacha.com/index.php/Wine/custom_detail?wine_id='+wine_id+'&sign='+sign+'&from=2b')
+    }
   },
   components:{
 

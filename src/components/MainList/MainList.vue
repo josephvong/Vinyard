@@ -1,7 +1,7 @@
 <template>
-  <div class="type-list">
+  <div class="main-list">
+    <Banner ></Banner>
     <div class="list-wrap">
-      <box gap="4rem 1rem">
         <div class="list-btn">
           <router-link style="display:block;width:100%;height:100%" to="/TagPage/district">按产区查找</router-link>
         </div>
@@ -14,15 +14,14 @@
         <div class="list-btn">
           <router-link style="display:block;width:100%;height:100%" to="/SelectPage">多条件综合查找</router-link>
         </div>
-      </box>
     </div>
   </div>
 </template>
 
 <script>
-import {Box} from 'vux'
+import Banner from "../Banner/Banner.vue"
 export default {
-  name: 'type-list',
+  name: 'main-list',
   data(){
     return {
 
@@ -32,21 +31,21 @@ export default {
 
   },
   components:{
-    Box
+    Banner
   },
   mounted(){
-    this.$store.dispatch("cleanSelectedArr")// 每次进入 单个选项入口页，清空已选项目
+    this.$store.dispatch("resetStateType")// 每次进入 单个选项入口页，清空已选项目
   }
 }
 </script>
 
 <style scpoed lang="stylus" rel="stylesheet/stylus">
-.type-list
+.main-list
   width:100%
+  padding:8rem 0;
   &>.list-wrap
    width:90%;
-   margin:2rem auto 0 auto;
-   background: white;
+   margin:3rem auto
    .list-btn
      width:100%;
      height:4rem;

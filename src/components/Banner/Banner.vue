@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <div class="banner-wrap">B2B找酒平台</div>
+    <div class="banner-wrap"></div>
   </div>
 </template>
 
@@ -31,16 +31,16 @@ export default {
   top:0;
   left:0;
   width: 100%;
-  height:4rem;
+  height:8rem;
   z-index: 5;
   .banner-wrap
     width: 100%;
     max-width:640px;
-    height:4rem;
-    line-height: 4rem;
-    font-size: 2rem;
+    height:8rem;
+    line-height: 8rem;
     margin: 0 auto;
-    color:white;
-    text-align: center;
-    background:#B91C36;
+    background:no-repeat;
+    background-position:center center;
+    background-size:contain;
+    background-image:url(./header-banner.jpg);
 </style>

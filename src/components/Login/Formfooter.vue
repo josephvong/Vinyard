@@ -3,7 +3,7 @@
   <div class="form-desc">
     请填写名称和电话号码，或选择上传名片进行登录
   </div>
- <div class="form-submit disable"><router-link style="display:block;width:100%;height:100%" to="/TypeList">提交</router-link></div>
+ <div class="form-submit disable"><router-link style="display:block;width:100%;height:100%" to="/MainList">提交</router-link></div>
 </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="tag-header-wrap">
-  <div class="header clearfix">
+  <div class="header clearfix" ref="tagHeader">
     <span v-show="selectedObj.district" class="top-tag">{{selectedObj.district}}<strong class="close">x</strong></span>
     <span v-show="selectedObj.winetype" class="top-tag">{{selectedObj.winetype}}<strong class="close">x</strong></span>
     <span v-show="selectedObj.grapetype" class="top-tag">{{selectedObj.grapetype}}<strong class="close">x</strong></span>
@@ -10,13 +10,16 @@
 </template>
 
 <script>
-
+import $ from "jquery"
 export default {
   name: 'taghead',
   props:{
     selectedObj:{
       type:Object,
       default:{}
+    },
+    eventHub:{
+      type:Object,
     }
   },
   data(){
@@ -27,10 +30,22 @@ export default {
   computed:{
 
   },
+  methods:{
+    fixedHeader(){ // 计算出 顶部 组建高度后 输出到 父组建
+      let HeadHeight = $(this.$refs.tagHeader).outerHeight();
+      this.$nextTick(()=>{
+        this.eventHub.$emit("fixedHeader",HeadHeight);
+      })
+
+    }
+  },
   components:{
 
   },
   mounted(){
+    this.fixedHeader(); // 传递 组建高度给母组件 调整 顶部填充距离
+
+
   }
 }
 </script>

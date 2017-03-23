@@ -3,7 +3,7 @@
     <h3 class="title">{{tagsData.title}}</h3>
     <div class="tag-wrap">
       <div class="col" v-for="(tag,index) in tagsData.list" v-show="tagShow||index<8">
-        <div v-bind:class="[{tag:true},{active:isExpress && tag==selectId }]" v-bind:tId="tag" v-bind:catalogName="catalogName" v-on:click="TagClickHandle()">{{tag}}</div>
+        <div v-bind:class="[{tag:true},{active:isExpress && tag==selectedId }]" v-bind:tId="tag" v-bind:catalogName="catalogName" v-on:click="TagClickHandle()">{{tag}}</div>
       </div>
     </div>
   <!--   <input v-show="isExpress" type="text" style="border:1px solid red" v-bind:value="selectId" /> -->
@@ -25,9 +25,12 @@ export default {
       type:Boolean,
       default:false
     },
-    selectId:{
+    selectedId:{
       type:String,
       default:null
+    },
+    eventHub:{
+      type:Object
     }
   },
   data(){
@@ -61,13 +64,12 @@ export default {
       let catalogName=event.target.getAttribute('catalogName');
       let tId=event.target.getAttribute('tId');
       if(this.isExpress){
-        this.$store.dispatch("modifyStateType",{catalogName:catalogName,tId:tId})
+        this.eventHub.$emit("modifySelection",{catalogName:catalogName,tId:tId}) // 在 父节点中设置
       }else{
-        this.$store.dispatch("selectStateType",{catalogName:catalogName,tId:tId})
-        //console.log( this.$store.state.selectM[catalogName] )
-        this.$nextTick(()=>{
-          this.$router.push({path:'/Result'})
-        })
+        let path = this.$route.path
+        window.history.pushState({"path":path},"","");  // 设置 浏览器历史
+        window.localStorage.setItem('selectedObj',JSON.stringify({catalogName:catalogName,tId:tId})) // 设置 本地存储
+        window.location.href="../ResultPage/index.html";
       }
     }
 

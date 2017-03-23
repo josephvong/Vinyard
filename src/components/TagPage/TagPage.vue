@@ -2,12 +2,17 @@
   <div class="tag-page">
    <Banner ></Banner>
    <Taglist v-bind:catalogName="catalogName" :isExpress=false ></Taglist>
+   <HomeBtn :isInResult=false ></HomeBtn>
+   <CamaraBtn inPageType="tagPage"></CamaraBtn>
   </div>
 </template>
 
 <script>
 import Banner from "../Banner/Banner.vue"
 import Taglist from '../Taglist/Taglist.vue'
+import HomeBtn from '../FloatBtn/HomeBtn.vue'
+import CamaraBtn from '../FloatBtn/CamaraBtn.vue'
+
 export default {
   name: 'tagpage',
   data(){
@@ -21,10 +26,11 @@ export default {
     }
   },
   components:{
-    Banner,Taglist
+    Banner,Taglist,HomeBtn,CamaraBtn
   },
   mounted(){
-
+    window.history.replacestate("","","");
+    window.localStorage.removeItem('selectedObj')// 清理历史缓存
   }
 }
 </script>

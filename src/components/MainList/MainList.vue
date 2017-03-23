@@ -15,11 +15,13 @@
           <router-link style="display:block;width:100%;height:100%" to="/SelectPage">多条件综合查找</router-link>
         </div>
     </div>
+    <CamaraBtn></CamaraBtn>
   </div>
 </template>
 
 <script>
 import Banner from "../Banner/Banner.vue"
+import CamaraBtn from '../FloatBtn/CamaraBtn.vue'
 export default {
   name: 'main-list',
   data(){
@@ -31,10 +33,12 @@ export default {
 
   },
   components:{
-    Banner
+    Banner,CamaraBtn
   },
   mounted(){
-    this.$store.dispatch("resetStateType")// 每次进入 单个选项入口页，清空已选项目
+    window.history.replaceState("","","");
+    window.localStorage.removeItem('selectedObj')
+
   }
 }
 </script>

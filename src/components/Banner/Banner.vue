@@ -25,15 +25,17 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-.banner
+<style scpoed rel="stylesheet/css">
+.banner{
   position: fixed;
   top:0;
   left:0;
   width: 100%;
   height:8rem;
   z-index: 5;
-  .banner-wrap
+}
+
+.banner-wrap{
     width: 100%;
     max-width:640px;
     height:8rem;
@@ -42,5 +44,6 @@ export default {
     background:no-repeat;
     background-position:center center;
     background-size:contain;
-    background-image:url(./header-banner.jpg);
+    background-image:url('./header-banner.png');
+}
 </style>

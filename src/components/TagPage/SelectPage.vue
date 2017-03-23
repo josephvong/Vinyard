@@ -1,14 +1,26 @@
 <template>
   <div class="select-page">
     <Banner></Banner>
-    <Taglist catalogName="district" :isExpress=true v-bind:selectId="selectObj.district"></Taglist>
-    <Taglist catalogName="winetype" :isExpress=true v-bind:selectId="selectObj.winetype"></Taglist>
-    <Taglist catalogName="grapetype" :isExpress=true v-bind:selectId="selectObj.grapetype"></Taglist>
+    <Taglist catalogName="district" :isExpress=true
+             v-bind:selectedId="selectedObj.district"
+             v-bind:eventHub = "eventHub"
+    ></Taglist>
+   <Taglist catalogName="winetype" :isExpress=true
+            v-bind:selectedId="selectedObj.winetype"
+            v-bind:eventHub = "eventHub"
+    ></Taglist>
+    <Taglist catalogName="grapetype" :isExpress=true
+             v-bind:selectedId="selectedObj.grapetype"
+             v-bind:eventHub = "eventHub"
+    ></Taglist>
 
+    <!-- <a href="http://www.baidu.com" v-on:click="Test()">test</a> -->
+    <HomeBtn :isInResult=false ></HomeBtn>
+    <CamaraBtn inPageType="selectPage" v-bind:eventHub = "eventHub" ></CamaraBtn>
     <div class="footer-wrap" style="display:block;">
       <div class="footer clearfix">
-          <router-link class="btn" to="/Result">提交</router-link>
-          <a class="btn" v-on:click="ResetClickHandle()">重置</a>
+          <a class="btn" v-on:click="submitClickHandle('../ResultPage/index.html')">提交</a>
+          <a class="btn" v-on:click="resetClickHandle()">重置</a>
       </div>
     </div>
   </div>
@@ -17,38 +29,71 @@
 <script>
 import Banner from "../Banner/Banner.vue"
 import Taglist from '../Taglist/Taglist.vue'
-import $ from 'jquery'
+import HomeBtn from '../FloatBtn/HomeBtn.vue'
+import CamaraBtn from '../FloatBtn/CamaraBtn.vue'
+import Vue from "vue"
 export default {
   name: 'selectpage',
   data(){
     return {
-
+      selectedObj:{
+        district:null,
+        winetype:null,
+        grapetype:null
+      },
+      eventHub:new Vue() // 父子节点之间的事件集合器
     }
   },
   computed:{
-    selectObj(){
-      let obj={};
-      obj.district = this.$store.state.selectM.district;
-      obj.winetype = this.$store.state.selectM.winetype;
-      obj.grapetype = this.$store.state.selectM.grapetype;
-      return obj
-    }
 
   },
   methods:{
-    ResetClickHandle(){
-      this.$store.dispatch("resetStateType")
+    modifySelection(obj){
+      if(this.selectedObj[obj.catalogName]==obj.tId){
+        this.selectedObj[obj.catalogName] = null
+      }else{
+        this.selectedObj[obj.catalogName] = obj.tId
+      }
+    },
+    resetClickHandle(){  // 重置选项
+      this.selectedObj={
+        district:null,
+        winetype:null,
+        grapetype:null
+      }
+    },
+    submitClickHandle(url){  // 重置选项
+      this.storeStatusJump(url);
+    },
+
+    storeStatusJump(url){
+      event.preventDefault();
+      let path = this.$route.path
+      window.history.pushState({"path":path},"","");  // 设置浏览器历史
+      window.localStorage.setItem('selectedObj',JSON.stringify(this.selectedObj) ) // 设置本地缓存
+      window.location.href=url;
     }
   },
   components:{
-    Banner,Taglist
+    Banner,Taglist,HomeBtn,CamaraBtn
   },
   mounted(){
-    $(window).scroll(function(){
-      return false
+    // 加载页面组件时：
+    window.history.replaceState("","",""); // 清空历史记录
+    if(window.localStorage.getItem('selectedObj')){  // 如果有本地缓存
+      let newObj=null;
+      newObj=Object.assign({},JSON.parse(window.localStorage.getItem('selectedObj'))); // 根据本地缓存还原选项
+      this.selectedObj = newObj;
+      window.localStorage.removeItem('selectedObj')  // 删除本地缓存
+    }
+    // 监听 标签列表 子节点 的点击事件触发
+    this.eventHub.$on("modifySelection",(obj)=>{
+      this.modifySelection(obj)
     })
-    //console.log(this.$store.state.district);
-    //console.log(this.selectObj)
+     // 监听 浮动按钮（拍照搜酒） 的点击事件触发
+     this.eventHub.$on("goCamaraPage",(url)=>{
+      this.storeStatusJump(url)
+    })
   }
 }
 </script>

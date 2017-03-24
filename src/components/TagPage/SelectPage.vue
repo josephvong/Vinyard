@@ -78,6 +78,10 @@ export default {
     Banner,Taglist,HomeBtn,CamaraBtn
   },
   mounted(){
+    window.localStorage.removeItem('resultList');
+    window.localStorage.removeItem('pageIndex');
+    window.localStorage.removeItem('scrollTop');
+
     // 加载页面组件时：
     window.history.replaceState("","",""); // 清空历史记录
     if(window.localStorage.getItem('selectedObj')){  // 如果有本地缓存

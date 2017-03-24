@@ -39,6 +39,10 @@ export default {
     window.history.replaceState("","","");
     window.localStorage.removeItem('selectedObj')
 
+    window.localStorage.removeItem('resultList');
+    window.localStorage.removeItem('pageIndex');
+    window.localStorage.removeItem('scrollTop');
+
   }
 }
 </script>

@@ -35,7 +35,8 @@
 export default {
   name: 'listitem',
   props:{
-    infoObj:{type:Object, default:{}}
+    infoObj:{type:Object, default:{}},
+    eventHub:{type:Object}
   },
   data(){
     return {
@@ -48,11 +49,13 @@ export default {
   methods:{
     wineryClickHandle(){
       let link = event.target.getAttribute("link");
+      this.eventHub.$emit("savePageStatus");
       window.open(link)
     },
     detailClickHandle(){
       let wine_id = event.target.getAttribute("wine_id");
       let sign = event.target.getAttribute("sign");
+      this.eventHub.$emit("savePageStatus");
       window.open('http://h5.9kacha.com/index.php/Wine/custom_detail?wine_id='+wine_id+'&sign='+sign+'&from=2b')
     }
   },

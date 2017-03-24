@@ -2,13 +2,16 @@
   <div class="result" ref="resultPage">
     <TagHead v-bind:selectedObj="selectedObj" v-bind:eventHub="eventHub"></TagHead>
     <div class="list-wrap">
-      
+
       <ul class="result-list">
-        <ListItem v-for="(item,index) in resultList" v-bind:infoObj="item" v-bind:key="index">
+        <ListItem v-for="(item,index) in resultList"
+                  v-bind:infoObj="item" v-bind:key="index"
+                  v-bind:eventHub="eventHub"
+        >
         </ListItem>
       </ul>
       <div class="no-result" v-show="isNoResult" >没有更多酒款</div>
-      <div class="add-more" v-show="!isNoMore">正在加载中...</div> 
+      <div class="add-more" v-show="!isNoMore">正在加载中...</div>
     </div>
   </div>
 </template>
@@ -25,13 +28,14 @@ export default {
   },
   data(){
     return {
-      pageIndex:1,
-      //selectedObj:$.extend({},JSON.parse(window.localStorage.getItem("selectedObj"))),
-      selectedObj:$.extend({},{"district":"艾米利亚-罗马涅","winetype":null,"grapetype":"赤霞珠"}),
+      selectedObj:$.extend({},JSON.parse(window.localStorage.getItem("selectedObj"))), //选中结果
+      resultList:JSON.parse(window.localStorage.getItem("resultList"))||[], // 结果列表
+      pageIndex:parseInt(window.localStorage.getItem("pageIndex"))||1, // 当前页码
+
       isNoResult:false, // 是否没有数据
       isNoMore:false,   // 是否加载结束
       stopScrollRequest: false,  // 是否暂停加载（默认不暂停）
-      resultList:[], // 结果列表
+
       staticData:{   // 固定参数
         "authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
         "authmode":"app",
@@ -39,7 +43,6 @@ export default {
         "cookie":"940158d239561338e"//window.localStorage.getItem("userCookie")
       },
       eventHub:new Vue()
-
     }
   },
   computed:{
@@ -47,7 +50,7 @@ export default {
   },
   methods:{
     // 加载数据
-    dataLoad(obj,page){ 
+    dataLoad(obj,page){
       let newObj={};
       newObj.region=obj.district||"0";
       newObj.wine_type=obj.winetype||"0";
@@ -78,16 +81,35 @@ export default {
           if(res.jsonData.length<10){
             this.isNoMore=true  // 已经结束
           }
-        } 
+        }
       }else{
         this.isNoResult=true // 没有数据
       }
     },
 
     // 调整标签刷新
+    editSelectedObj(obj){
+      if(this.selectedObj[obj.catalogName] == obj.tId){
+        this.selectedObj[obj.catalogName] = null;
+      }
+      window.localStorage.setItem("selectedObj",JSON.stringify(this.selectedObj)) // 更新本地保存选中标签
+      $(window).scrollTop(0);
+      this.resultList=[];
+      this.pageIndex = 1;
+      this.$nextTick(()=>{
+        this.dataLoad(this.selectedObj,this.pageIndex)
+      })
+    },
+
+    // 记录页面当前状态
+    savePageStatus(){
+      window.localStorage.setItem('resultList',JSON.stringify(this.resultList));
+      window.localStorage.setItem('pageIndex',this.pageIndex);
+      window.localStorage.setItem('scrollTop',$(window).scrollTop());
+    },
 
     // 调整页面padding-top 的函数
-    fixedHeader(num){ 
+    fixedHeader(num){
       $(this.$refs.resultPage).css("padding-top",num)
     }
   },
@@ -95,7 +117,11 @@ export default {
     TagHead, ListItem
   },
   mounted(){
-    //window.localStorage.removeItem("selectedObj") ; // 获取数据后 清除页面
+
+    if(window.localStorage.getItem("scrollTop")){
+      $(window).scrollTop(window.localStorage.getItem("scrollTop"))
+    }
+
     this.eventHub.$on("fixedHeader",(num)=>{  // 监听 tag-header 组建传过来的高度，
       this.fixedHeader(num)   //执行padding-top 的调整函数
     });
@@ -111,9 +137,19 @@ export default {
         if(!this.stopScrollRequest){
           this.stopScrollRequest=true;
           this.pageIndex+=1;
-          this.dataLoad(this.selectedObj,this.pageIndex);  
+          this.dataLoad(this.selectedObj,this.pageIndex);
         }
-      } 
+      }
+    })
+
+    // 监听 头部标签点击事件
+    this.eventHub.$on("editSelectedObj",(obj)=>{
+      this.editSelectedObj(obj)
+    })
+
+    //监听 列表连接点击事件
+    this.eventHub.$on("savePageStatus",()=>{
+      this.savePageStatus()
     })
   }
 }

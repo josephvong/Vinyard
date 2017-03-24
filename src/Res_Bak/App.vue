@@ -1,11 +1,12 @@
 <template>
   <div class="app" >
-    <router-view></router-view>
+    <Result></Result>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
 <script>
-
+import Result from "./components/Result/Result.vue"
 export default {
   name: 'app',
   data(){
@@ -14,11 +15,10 @@ export default {
     }
   },
   computed:{
-    isShowBanner(){
-      return this.$store.state.selectM.isShowBanner
-    }
+
   },
   components:{
+    Result
   },
   mounted(){
 

@@ -2,7 +2,7 @@
   <div class="tag-header-wrap">
   <div class="header clearfix" ref="tagHeader">
     <span v-show="selectedObj.district" class="top-tag" v-bind:tId="selectedObj.district"
-          v-on:click="tagClickHandle('district')" 
+          v-on:click="tagClickHandle('district')"
     >
       {{selectedObj.district}}<strong class="close">x</strong>
     </span>
@@ -47,11 +47,13 @@ export default {
       let HeadHeight = $(this.$refs.tagHeader).outerHeight();
       this.$nextTick(()=>{
         this.eventHub.$emit("fixedHeader",HeadHeight);
-      }) 
+      })
     },
 
     tagClickHandle(catName){
-      console.log(catName);
+      let catalogName = catName ;
+      let tId = event.target.getAttribute("tId");
+      this.eventHub.$emit("editSelectedObj",{"catalogName":catalogName,"tId":tId})
     }
   },
   components:{

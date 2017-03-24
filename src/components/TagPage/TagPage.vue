@@ -29,8 +29,12 @@ export default {
     Banner,Taglist,HomeBtn,CamaraBtn
   },
   mounted(){
-    window.history.replacestate("","","");
+    window.history.replaceState("","","");
     window.localStorage.removeItem('selectedObj')// 清理历史缓存
+
+    window.localStorage.removeItem('resultList');
+    window.localStorage.removeItem('pageIndex');
+    window.localStorage.removeItem('scrollTop');
   }
 }
 </script>

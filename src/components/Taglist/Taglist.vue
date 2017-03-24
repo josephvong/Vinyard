@@ -69,7 +69,7 @@ export default {
         let path = this.$route.path
         window.history.pushState({"path":path},"","");  // 设置 浏览器历史
         window.localStorage.setItem('selectedObj',JSON.stringify({catalogName:catalogName,tId:tId})) // 设置 本地存储
-        window.location.href="../ResultPage/index.html";
+        //window.location.href="../ResultPage/index.html";
       }
     }
 

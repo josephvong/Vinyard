@@ -2,17 +2,24 @@
   <div class="tag-list">
     <h3 class="title">{{tagsData.title}}</h3>
     <div class="tag-wrap">
-      <div class="col" v-for="(tag,index) in tagsData.list" v-show="tagShow||index<8">
-        <div v-bind:class="[{tag:true},{active:isExpress && tag==selectedId }]" v-bind:tId="tag" v-bind:catalogName="catalogName" v-on:click="TagClickHandle()">{{tag}}</div>
+      <div class="col" v-for="(tag,index) in tagsData.list" v-show="tagShow||index<8" >
+        <div class="tag" v-bind:class="[{tag:true},{active:tag.name_ch==selectedId}]" ref="tag"
+              v-bind:tId="tag.name_ch"  v-bind:catalogName="catalogName"  v-on:click="TagClickHandle($event)"
+        >
+          <span v-bind:tId="tag.name_ch"  v-bind:catalogName="catalogName">{{tag.name_ch}}</span>
+          <span v-bind:tId="tag.name_ch"  v-bind:catalogName="catalogName" v-show="tag.name_en!=''">
+            {{tag.name_en}}
+          </span>
+        </div>
       </div>
     </div>
-  <!--   <input v-show="isExpress" type="text" style="border:1px solid red" v-bind:value="selectId" /> -->
+    <input type="text" v-bind:value="selectedId" />
     <a v-show="isExpress" v-on:click="ExpressClickHandle()" class="express">{{tagShow?"收起":"更多"}}</a>
   </div>
 </template>
 
 <script>
-import tagData from "../../assets/tagData"
+import tagData from "common/tagData"
 import $ from "jquery"
 export default {
   name: 'taglist',
@@ -25,9 +32,8 @@ export default {
       type:Boolean,
       default:false
     },
-    selectedId:{
-      type:String,
-      default:null
+    selectedObj:{
+      type:Object,
     },
     eventHub:{
       type:Object
@@ -36,7 +42,8 @@ export default {
   data(){
     return {
       tagsData:tagData[this.catalogName],
-      showToggle:false // 默认隐藏
+      showToggle:false, // 默认隐藏
+      selectedId:null
     }
   },
   computed:{
@@ -50,7 +57,11 @@ export default {
       }else{  // 无展开功能
         return true // 全部显示
       }
-    }
+    },
+    /*selectedId(){
+      return this.selectedObj[this.catalogName]
+    }*/
+
   },
   components:{
      //Tag
@@ -60,22 +71,33 @@ export default {
       this.showToggle=!this.showToggle
       return this.showToggle
     },
-    TagClickHandle(){
+    TagClickHandle(event){
+
       let catalogName=event.target.getAttribute('catalogName');
       let tId=event.target.getAttribute('tId');
-      if(this.isExpress){
-        this.eventHub.$emit("modifySelection",{catalogName:catalogName,tId:tId}) // 在 父节点中设置
-      }else{
-        let path = this.$route.path
-        window.history.pushState({"path":path},"","");  // 设置 浏览器历史
-        window.localStorage.setItem('selectedObj',JSON.stringify({catalogName:catalogName,tId:tId})) // 设置 本地存储
+      if(this.isExpress){  // 多选
+        this.eventHub.$emit("modifySelection",catalogName,tId);
+        this.selectedId = this.selectedObj[this.catalogName]
+
+
+      }else{    // 单选
+        console.log(JSON.parse('{"'+catalogName+'":"'+tId+'"}'))
+        //let path = this.$route.path
+        //window.history.pushState({"path":path},"","");  // 设置 浏览器历史
+        //window.localStorage.setItem('selectedObj','{"'+catalogName+'":"'+tId+'"}') // 设置 本地存储
         //window.location.href="../ResultPage/index.html";
       }
+    },
+
+    removeSelected(){
+      this.selectedId=null;
     }
 
   },
   mounted(){
-
+    // console.log(this.catalogName);
+    // console.log(this.selectedObj);
+    // console.log(this.selectedObj[this.catalogName])
   }
 }
 </script>
@@ -127,21 +149,38 @@ export default {
 }
 .col .tag{
   display: inline-block;
-  width:100%;  line-height: 3rem;
-  font-size: 1.2rem;
+  width:100%;
+
   padding:0.5rem 1.2rem;
   border-radius:6px;
   overflow: hidden;
   color:#545454;
   background: white;
 }
+.col .tag span{
+  display: block;
+  width:100%; line-height: 2rem;font-size: 1.2rem;
+}
 .col .tag.active{
     color:white;
     background: #B91C36;
 }
-.col .tag a{
-  display: line-block;
-  max-width: 100%;
-  overflow-x: hidden;
-}
 </style>
+
+
+<!-- <template>
+  <div class="tag-list">
+    <h3 class="title">{{tagsData.title}}</h3>
+    <div class="tag-wrap">
+      <div class="col" v-for="(tag,index) in tagsData.list" v-show="tagShow||index<8" >
+        <div v-bind:class="[{tag:true}]"
+             v-bind:tId="tag"  v-bind:catalogName="catalogName"
+             v-on:click="TagClickHandle()"
+        >
+          {{tag}}
+        </div>
+      </div>
+    </div>
+    <a v-show="isExpress" v-on:click="ExpressClickHandle()" class="express">{{tagShow?"收起":"更多"}}</a>
+  </div>
+</template> -->

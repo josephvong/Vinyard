@@ -1,11 +1,11 @@
 <template>
   <div class="app" >
     <router-view></router-view>
+   <!--  <a v-on:click="test()">test</a> -->
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'app',
   data(){
@@ -14,8 +14,12 @@ export default {
     }
   },
   computed:{
-    isShowBanner(){
-      return this.$store.state.selectM.isShowBanner
+
+  },
+  methods:{
+    test(){
+
+        window.location.href="./result.html"
     }
   },
   components:{
@@ -27,8 +31,8 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-@import "../static/css/reset.css"
-@import "../static/css/cusstyle.css"
+@import "../../common/css/reset.css"
+@import "../../common/css/cusstyle.css"
 .app
   width:100%
   position: relative

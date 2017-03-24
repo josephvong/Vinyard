@@ -6,10 +6,10 @@
           <router-link style="display:block;width:100%;height:100%" to="/TagPage/district">按产区查找</router-link>
         </div>
         <div class="list-btn">
-          <router-link style="display:block;width:100%;height:100%" to="/TagPage/winetype">按酒品类型查找</router-link>
+          <router-link style="display:block;width:100%;height:100%" to="/TagPage/wine_type">按酒品类型查找</router-link>
         </div>
         <div class="list-btn">
-          <router-link style="display:block;width:100%;height:100%" to="/TagPage/grapetype">按葡萄品种查找</router-link>
+          <router-link style="display:block;width:100%;height:100%" to="/TagPage/grape">按葡萄品种查找</router-link>
         </div>
         <div class="list-btn">
           <router-link style="display:block;width:100%;height:100%" to="/SelectPage">多条件综合查找</router-link>

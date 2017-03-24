@@ -8,10 +8,17 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+/*======多入口文件配置项======*/
+var projectRoot = path.resolve(__dirname, '../')
+var glob = require('glob');
+var entries = getEntry(['./src/module/*.js', './src/module/**/*.js']); // 获得入口js文件（getEntry函数在下面定义）
+/*============================*/
+
 var webpackConfig = {
-  entry: {
+  /*entry: {
     app: './src/main.js'
-  },
+  },*/
+  entry: entries,   // 多入口数组
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -24,6 +31,8 @@ var webpackConfig = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'common': path.resolve(__dirname, '../src/common'),  // 添加两个别名 common
+      'components': path.resolve(__dirname, '../src/components')   // 添加两个别名 components
     }
   },
   module: {
@@ -36,7 +45,9 @@ var webpackConfig = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        //include: [resolve('src'), resolve('test')]
+        include: projectRoot,
+        exclude: /node_modules/
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -66,3 +77,25 @@ module.exports = vuxLoader.merge(webpackConfig,{
     {name:'vux-ui'}
   ]
 })
+
+
+function getEntry(globPath) {
+  var entries = {},
+    basename, tmp, pathname;
+  if (typeof (globPath) != "object") {
+    globPath = [globPath]
+  }
+  globPath.forEach((itemPath) => {
+    glob.sync(itemPath).forEach(function (entry) {
+      basename = path.basename(entry, path.extname(entry));
+      if (entry.split('/').length > 4) {
+        tmp = entry.split('/').splice(-3);
+        pathname = tmp.splice(0, 1) + '/' + basename; // 正确输出js和html的路径
+        entries[pathname] = entry;
+      } else {
+        entries[basename] = entry;
+      }
+    });
+  });
+  return entries;
+}

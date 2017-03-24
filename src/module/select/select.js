@@ -26,8 +26,8 @@ import 'es6-promise/auto'
 /*-------三种方法 使用ajax 发送请求---------*/
 
 /*--------------点击延时------------------*/
-import FastClick from 'fastclick'
-FastClick.attach(document.body)
+//import FastClick from 'fastclick'
+//FastClick.attach(document.body)
 /*--------------点击延时------------------*/
 
 
@@ -40,6 +40,16 @@ FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
+// 根据 判断 加载页面时 有无历史记录可以调用，用来控制“返回”时 页面的加载
+let lastpath=null;
+if(window.history.state){
+	if(window.history.state.path ){
+		lastpath = window.history.state.path;
+	}
+}else{
+	lastpath = '/'
+}
+
 
 /* eslint-disable no-new */
 new Vue({
@@ -47,7 +57,12 @@ new Vue({
   //store:appstore,
   render:h=>h(App,{}),
   mounted(){
-
+    router.push({"path":'/'});
+  	/*if( lastpath != '/'){
+			router.push({"path":lastpath});
+  	}else{
+  		router.push({"path":'/'});
+  	}*/
   }
 }).$mount("#app")
 

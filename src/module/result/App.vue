@@ -1,12 +1,13 @@
 <template>
   <div class="app" >
-    <Result></Result>
+  AAAAAAAAAAAAAAAAAAAS
+    <!-- <Result></Result> -->
     <!-- <router-view></router-view> -->
   </div>
 </template>
 
 <script>
-import Result from "./components/Result/Result.vue"
+//import Result from "./components/Result/Result.vue"
 export default {
   name: 'app',
   data(){
@@ -18,7 +19,7 @@ export default {
 
   },
   components:{
-    Result
+    //Result
   },
   mounted(){
 
@@ -27,8 +28,8 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-@import "../static/css/reset.css"
-@import "../static/css/cusstyle.css"
+@import "../../common/css/reset.css"
+@import "../../common/css/cusstyle.css"
 .app
   width:100%
   position: relative

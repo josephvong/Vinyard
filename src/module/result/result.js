@@ -3,7 +3,7 @@
 
 import Vue from 'vue'
 import App from './App'
-import router from './router'
+//import router from './router'
 import 'es6-promise/auto'
 
 //import appstore from './vuex/appstore'
@@ -40,28 +40,14 @@ FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
-// 根据 判断 加载页面时 有无历史记录可以调用，用来控制“返回”时 页面的加载
-let lastpath=null;
-if(window.history.state){
-	if(window.history.state.path ){
-		lastpath = window.history.state.path;
-	}
-}else{
-	lastpath = '/'
-}
-
 
 /* eslint-disable no-new */
 new Vue({
-  router,
+  //router,
   //store:appstore,
   render:h=>h(App,{}),
   mounted(){
-  	if( lastpath != '/'){
-			router.push({"path":lastpath});
-  	}else{
-  		router.push({"path":'/'});
-  	}
+
   }
 }).$mount("#app")
 

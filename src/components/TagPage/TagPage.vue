@@ -2,16 +2,17 @@
   <div class="tag-page">
    <Banner ></Banner>
    <Taglist v-bind:catalogName="catalogName" :isExpress=false ></Taglist>
+
    <HomeBtn :isInResult=false ></HomeBtn>
    <CamaraBtn inPageType="tagPage"></CamaraBtn>
   </div>
 </template>
 
 <script>
-import Banner from "../Banner/Banner.vue"
-import Taglist from '../Taglist/Taglist.vue'
-import HomeBtn from '../FloatBtn/HomeBtn.vue'
-import CamaraBtn from '../FloatBtn/CamaraBtn.vue'
+import Banner from "components/Banner/Banner.vue"
+import Taglist from 'components/Taglist/Taglist.vue'
+import HomeBtn from 'components/FloatBtn/HomeBtn.vue'
+import CamaraBtn from 'components/FloatBtn/CamaraBtn.vue'
 
 export default {
   name: 'tagpage',

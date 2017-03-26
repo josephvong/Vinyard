@@ -3,7 +3,7 @@
    <Banner ></Banner>
    <Taglist v-bind:catalogName="catalogName" :isExpress=false ></Taglist>
 
-   <HomeBtn :isInResult=false ></HomeBtn>
+   <HomeBtn url="/" ></HomeBtn>
    <CamaraBtn inPageType="tagPage"></CamaraBtn>
   </div>
 </template>

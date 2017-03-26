@@ -9,9 +9,8 @@
 export default {
   name: 'homebtn',
   props:{
-    isInResult:{
-      type:Boolean,
-      default:false
+    url:{
+      type:String
     }
   },
   data(){
@@ -25,12 +24,12 @@ export default {
   methods:{
     backHomeHandle(){
       event.preventDefault();
-      if(this.isInResult){
-        window.location.href="../SelectPage/index.html"
-      }else{
+      if(this.url=="/"){
         window.history.replaceState("","","");
         window.localStorage.removeItem('selectedObj');
         this.$router.push({'path':'/'})
+      }else if(this.url=="module/select.html"){
+        window.location.href="/module/select.html";
       }
 
     }

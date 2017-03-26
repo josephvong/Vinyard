@@ -4,17 +4,17 @@
     <span v-show="selectedObj.district" class="top-tag" v-bind:tId="selectedObj.district"
           v-on:click="tagClickHandle('district')"
     >
-      {{selectedObj.district}}<strong class="close">x</strong>
+      {{selectedObj.district}}
     </span>
-    <span v-show="selectedObj.winetype" class="top-tag" v-bind:tId="selectedObj.winetype"
-          v-on:click="tagClickHandle('winetype')"
+    <span v-show="selectedObj.wine_type" class="top-tag" v-bind:tId="selectedObj.wine_type"
+          v-on:click="tagClickHandle('wine_type')"
     >
-      {{selectedObj.winetype}}<strong class="close">x</strong>
+      {{selectedObj.wine_type}}
     </span>
-    <span v-show="selectedObj.grapetype" class="top-tag" v-bind:tId="selectedObj.grapetype"
-           v-on:click="tagClickHandle('grapetype')"
+    <span v-show="selectedObj.grape" class="top-tag" v-bind:tId="selectedObj.grape"
+           v-on:click="tagClickHandle('grape')"
     >
-      {{selectedObj.grapetype}}<strong class="close">x</strong>
+      {{selectedObj.grape}}
     </span>
   </div>
 </div>

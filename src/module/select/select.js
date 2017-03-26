@@ -57,12 +57,11 @@ new Vue({
   //store:appstore,
   render:h=>h(App,{}),
   mounted(){
-    router.push({"path":'/'});
-  	/*if( lastpath != '/'){
+  	if( lastpath != '/'){
 			router.push({"path":lastpath});
   	}else{
   		router.push({"path":'/'});
-  	}*/
+  	}
   }
 }).$mount("#app")
 

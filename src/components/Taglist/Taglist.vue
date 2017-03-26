@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <input type="text" v-bind:value="selectedId" />
+    <!--<input type="text" value="" /> -->
     <a v-show="isExpress" v-on:click="ExpressClickHandle()" class="express">{{tagShow?"收起":"更多"}}</a>
   </div>
 </template>
@@ -32,9 +32,9 @@ export default {
       type:Boolean,
       default:false
     },
-    selectedObj:{
+    /*selectedObj:{
       type:Object,
-    },
+    },*/
     eventHub:{
       type:Object
     }
@@ -43,13 +43,13 @@ export default {
     return {
       tagsData:tagData[this.catalogName],
       showToggle:false, // 默认隐藏
-      selectedId:null
+      selectedId:null,  // 选中的ID
     }
   },
   computed:{
     tagShow(){
       if(this.isExpress){ // 有展开功能
-        if(this.showToggle){ //
+        if(this.showToggle){ 
           return true
         }else{
           return false
@@ -57,11 +57,7 @@ export default {
       }else{  // 无展开功能
         return true // 全部显示
       }
-    },
-    /*selectedId(){
-      return this.selectedObj[this.catalogName]
-    }*/
-
+    }, 
   },
   components:{
      //Tag
@@ -72,32 +68,34 @@ export default {
       return this.showToggle
     },
     TagClickHandle(event){
-
+      // 获取点击对象的数据
       let catalogName=event.target.getAttribute('catalogName');
       let tId=event.target.getAttribute('tId');
       if(this.isExpress){  // 多选
-        this.eventHub.$emit("modifySelection",catalogName,tId);
-        this.selectedId = this.selectedObj[this.catalogName]
-
+        
+        this.eventHub.$emit("modifySelection",catalogName,tId); // 将点击的标签数据提交给父级组件
 
       }else{    // 单选
-        console.log(JSON.parse('{"'+catalogName+'":"'+tId+'"}'))
-        //let path = this.$route.path
-        //window.history.pushState({"path":path},"","");  // 设置 浏览器历史
-        //window.localStorage.setItem('selectedObj','{"'+catalogName+'":"'+tId+'"}') // 设置 本地存储
-        //window.location.href="../ResultPage/index.html";
+        // 直接转跳页面
+        let path = this.$route.path
+        window.history.pushState({"path":path},"","");  // 设置 浏览器历史
+        window.localStorage.setItem('selectedObj','{"'+catalogName+'":"'+tId+'"}') // 设置 本地存储
+        window.location.href="/module/result.html";  // 直接转跳
+
       }
     },
 
-    removeSelected(){
-      this.selectedId=null;
-    }
+    setSelected(obj){ 
+      this.selectedId = obj[this.catalogName]
+    }, 
+    
 
   },
-  mounted(){
-    // console.log(this.catalogName);
-    // console.log(this.selectedObj);
-    // console.log(this.selectedObj[this.catalogName])
+  watch:{
+    
+  },
+  mounted(){ 
+      
   }
 }
 </script>

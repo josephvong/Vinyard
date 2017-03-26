@@ -1,13 +1,11 @@
 <template>
-  <div class="app" >
-  AAAAAAAAAAAAAAAAAAAS
-    <!-- <Result></Result> -->
-    <!-- <router-view></router-view> -->
+  <div class="app" > 
+    <Result></Result>
   </div>
 </template>
 
 <script>
-//import Result from "./components/Result/Result.vue"
+import Result from "components/Result/Result.vue"
 export default {
   name: 'app',
   data(){
@@ -19,7 +17,7 @@ export default {
 
   },
   components:{
-    //Result
+    Result
   },
   mounted(){
 
@@ -32,6 +30,7 @@ export default {
 @import "../../common/css/cusstyle.css"
 .app
   width:100%
+  padding-bottom:2rem;
   position: relative
   margin: 0 auto
   max-width:640px;

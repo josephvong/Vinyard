@@ -11,7 +11,7 @@
              v-bind:eventHub = "eventHub"  v-bind:selectedObj = "selectedObj"
     ></Taglist>
 
-    <HomeBtn :isInResult=false ></HomeBtn>
+    <HomeBtn url="/" ></HomeBtn>
     <CamaraBtn inPageType="selectPage" v-bind:eventHub = "eventHub" ></CamaraBtn>
     <div class="footer-wrap" style="display:block;">
       <div class="footer clearfix">
@@ -40,8 +40,8 @@ export default {
 
   },
   methods:{
+    // 编辑选中的数据对象
     modifySelection(catalogName,tId){
-
       if(this.selectedObj[catalogName]){
         if(this.selectedObj[catalogName]!=tId){
           this.selectedObj[catalogName] = tId
@@ -51,22 +51,40 @@ export default {
       }else{
         Object.assign(this.selectedObj,JSON.parse('{"'+catalogName+'":"'+tId+'"}'))
       }
+      this.$nextTick(()=>{
+        this.initTagList()
+      })
     },
-    resetClickHandle(){  // 重置选项
-     this.selectedObj={};
-     this.$refs.districtTag.removeSelected()
-     this.$refs.wineTag.removeSelected()
-     this.$refs.grapeTag.removeSelected()
-    },
-    submitClickHandle(url){  // 重置选项
-      console.log(this.selectedObj);
+    
+    // 初始化 子组件 的选择属性
+    initTagList(){  
+     this.$refs.districtTag.setSelected(this.selectedObj) 
+     this.$refs.wineTag.setSelected(this.selectedObj)
+     this.$refs.grapeTag.setSelected(this.selectedObj)
     },
 
+    // 重置选项
+    resetClickHandle(){  
+      this.selectedObj={};
+      this.$nextTick(()=>{
+        this.initTagList()
+      })
+    },
+
+    // 提交选项
+    submitClickHandle(url){    
+      let path = this.$route.path
+      window.history.pushState({"path":path},"","");  // 设置浏览器历史
+      window.localStorage.setItem('selectedObj',JSON.stringify(this.selectedObj) ) // 设置本地缓存
+      window.location.href="/module/result.html";
+    },
+
+    // 保存当前页面状态转跳页面
     storeStatusJump(url){
       event.preventDefault();
       let path = this.$route.path
       window.history.pushState({"path":path},"","");  // 设置浏览器历史
-      //window.localStorage.setItem('selectedObj',JSON.stringify(this.selectedObj) ) // 设置本地缓存
+      window.localStorage.setItem('selectedObj',JSON.stringify(this.selectedObj) ) // 设置本地缓存
       window.location.href=url;
     }
   },
@@ -74,18 +92,22 @@ export default {
     Banner,Taglist,HomeBtn,CamaraBtn
   },
   mounted(){
+    // 清除 Result.html 页面中的 缓存记录
     window.localStorage.removeItem('resultList');
     window.localStorage.removeItem('pageIndex');
     window.localStorage.removeItem('scrollTop');
 
     // 加载页面组件时：
     window.history.replaceState("","",""); // 清空历史记录
-    /*if(window.localStorage.getItem('selectedObj')){  // 如果有本地缓存
+    if(window.localStorage.getItem('selectedObj')){  // 如果有本地缓存
       let newObj=null;
       newObj=Object.assign({},JSON.parse(window.localStorage.getItem('selectedObj'))); // 根据本地缓存还原选项
-      this.selectedObj = newObj;
+      this.selectedObj = newObj; 
       window.localStorage.removeItem('selectedObj')  // 删除本地缓存
-    }*/
+    }
+
+    // 初始化标签列表
+    this.initTagList();
 
     // 监听 标签列表 子节点 的点击事件触发
     this.eventHub.$on("modifySelection",(catalogName,tId)=>{
@@ -93,9 +115,9 @@ export default {
     })
 
     // 监听 浮动按钮（拍照搜酒） 的点击事件触发
-    /*this.eventHub.$on("goCamaraPage",(url)=>{
+    this.eventHub.$on("goCamaraPage",(url)=>{
       this.storeStatusJump(url)
-    })*/
+    })
   }
 }
 </script>

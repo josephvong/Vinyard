@@ -13,12 +13,14 @@
       <div class="no-result" v-show="isNoResult" >没有更多酒款</div>
       <div class="add-more" v-show="!isNoMore">正在加载中...</div>
     </div>
+    <HomeBtn url="module/select.html" ></HomeBtn>
   </div>
 </template>
 
 <script>
 import TagHead from "./TagHead.vue"
 import ListItem from "./ListItem.vue"
+import HomeBtn from 'components/FloatBtn/HomeBtn'
 import $ from 'jquery'
 import Vue from 'vue'
 
@@ -53,8 +55,8 @@ export default {
     dataLoad(obj,page){
       let newObj={};
       newObj.region=obj.district||"0";
-      newObj.wine_type=obj.winetype||"0";
-      newObj.grape=obj.grapetype||"0";
+      newObj.wine_type=obj.wine_type||"0";
+      newObj.grape=obj.grape||"0";
       let JParams = $.extend({},this.staticData,newObj,{"page":page});
       $.ajax({
         url:'http://zyshi.9kacha.com/AutoRecommWines/toBfindWine/findWine.php',
@@ -83,6 +85,7 @@ export default {
           }
         }
       }else{
+        this.isNoMore = true
         this.isNoResult=true // 没有数据
       }
     },
@@ -114,10 +117,10 @@ export default {
     }
   },
   components:{
-    TagHead, ListItem
+    TagHead, ListItem, HomeBtn
   },
   mounted(){
-
+    //console.log(this.selectedObj);
     if(window.localStorage.getItem("scrollTop")){
       $(window).scrollTop(window.localStorage.getItem("scrollTop"))
     }

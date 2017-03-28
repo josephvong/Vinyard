@@ -4,15 +4,15 @@
     <Tabbar v-bind:eventHub="eventHub"  ref="tabbar" ></Tabbar>
     <div class="list-wrap">
 
-      <ul class="result-list">
+      <ul class="result-list" ref="resultList">
         <ResultItem v-for="(item,index) in resultList"
                   v-bind:infoObj="item" v-bind:key="index"
                   v-bind:eventHub="eventHub"
         >
         </ResultItem>
       </ul>
-      <div class="no-result"   >没有更多酒款</div>
-      <div class="add-more"  >正在加载中...</div>
+      <div class="no-result"  v-show="isNoResult"  >没有更多酒款</div>
+      <div class="add-more" v-show="!isNoMore" >正在加载中...</div>
     </div>
 
     <!-- 弹出型筛选器 -->
@@ -36,7 +36,7 @@
 
           <div class="bottom">
             <a class="btn" v-on:click="submitClickHandle()" >提交</a>
-            <a class="btn" v-on:click="resetClickHandle()" >重置</a>
+            <a class="btn" v-on:click="resetClickHandle()"  >重置</a>
           </div>
       </div>
     </popup>
@@ -121,9 +121,14 @@ export default {
         if(this.selectedObj[catalogName]==tId){
           this.selectedObj[catalogName] = null
         }
+
         this.$nextTick(()=>{
           this.initTagList();
           this.initTabBar();
+
+          $(window).scrollTop(0)
+          this.resultList=[];
+          this.pageIndex = 1;
 
           // 此处 加载数据之前必须重置一下其他列表状态数据
           this.reslutDataLoad()// 加载数据
@@ -162,6 +167,11 @@ export default {
       submitClickHandle(){
         this.filterShow=false; // 关闭筛选器
         this.initTabBar();
+
+        this.resultList=[]; // 清空结果列表数据
+        this.pageIndex = 1;
+        $(window).scrollTop(0)
+
         this.$nextTick(()=>{  // 加载列表数据
           this.reslutDataLoad()
         })
@@ -223,7 +233,22 @@ export default {
       },
     //=================结果列表数据加载(完结)===========================
 
-
+    //=================App组件内 事件 触发函数=========================
+      windowScrollHandle(){  // window.scroll 事件触发函数
+        let viewHeight=$(window).height();
+        let listHeight = $(this.$refs.resultList).outerHeight();
+        let overTop=listHeight-viewHeight; // >0 or not
+        let btmHeight=$(window).scrollTop()-overTop;
+        if(btmHeight > 0){
+          /*console.log(btmHeight)*/
+          if(!this.stopScrollRequest){
+            this.stopScrollRequest=true;
+            this.pageIndex+=1;
+            this.reslutDataLoad();
+          }
+        }
+      }
+    //================================================================
 
   },
   components:{
@@ -245,6 +270,11 @@ export default {
     // 根据 selectedObj 初始化子组件
     this.initTagList();  //初始化选择TagList 子组件
     this.initTabBar(); //初始化 Tabbar 子组件(显示symbol)
+
+    // 监听 window.scroll
+    $(window).on("scroll",()=>{
+      this.windowScrollHandle()
+    })
 
     // 监听 filterList 展开后 发送的 scrollerRefresh 事件
     this.eventHub.$on("scrollerRefresh",()=>{

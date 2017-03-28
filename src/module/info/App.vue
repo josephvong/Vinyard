@@ -4,13 +4,13 @@
     <Tabbar v-bind:eventHub="eventHub"  ref="tabbar" ></Tabbar>
     <div class="list-wrap">
 
-      <!-- <ul class="result-list">
-        <ListItem v-for="(item,index) in resultList"
+      <ul class="result-list">
+        <ResultItem v-for="(item,index) in resultList"
                   v-bind:infoObj="item" v-bind:key="index"
                   v-bind:eventHub="eventHub"
         >
-        </ListItem>
-      </ul> -->
+        </ResultItem>
+      </ul>
       <div class="no-result"   >没有更多酒款</div>
       <div class="add-more"  >正在加载中...</div>
     </div>
@@ -21,7 +21,7 @@
           <a class="close-filter" v-on:click="closeFilter()">x</a>
           <scroller lock-x  ref="filterScroll" >
             <div class="select-wrap">
-              <Filterlist catalogName="district"  ref="districtTag"
+              <Filterlist catalogName="region"  ref="regionTag"
                           v-bind:eventHub="eventHub" v-bind:selectedObj="selectedObj"
               ></Filterlist>
               <Filterlist catalogName="wine_type" ref="wineTag"
@@ -45,6 +45,9 @@
 </template>
 
 <script>
+import "common/css/reset.css"
+import "common/css/cusstyle.css"
+
 import { Popup, Scroller  } from 'vux'
 
 import $ from "jquery"
@@ -53,6 +56,7 @@ import _ from "lodash"
 
 import Filterlist from "components/Filter/Filterlist.vue"
 import Tabbar from "components/Tabbar/Tabbar.vue"
+import ResultItem from "components/ResultItem/ResultItem.vue"
 
 export default {
   name: 'app',
@@ -69,7 +73,15 @@ export default {
       // 全局结果列表状态
       resultList:JSON.parse(window.localStorage.getItem("resultList"))||[], // 结果列表
       pageIndex:parseInt(window.localStorage.getItem("pageIndex"))||1, // 当前页码
-
+      stopScrollRequest:false,  // 滚动加载停止
+      isNoResult:false, // 是否没有数据
+      isNoMore:false,   // 是否加载结束
+      stableData:{  // 列表加载API 固定参数
+        "authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
+        "authmode":"app",
+        "country":"意大利",
+        "cookie":"940158d239561338e"//window.localStorage.getItem("userCookie")
+      },
 
       // 事件集合
       eventHub:new Vue(),
@@ -112,6 +124,9 @@ export default {
         this.$nextTick(()=>{
           this.initTagList();
           this.initTabBar();
+
+          // 此处 加载数据之前必须重置一下其他列表状态数据
+          this.reslutDataLoad()// 加载数据
         })
       },
 
@@ -123,7 +138,7 @@ export default {
 
     //========子组件动态数据（选项数据）更新函数=============
       initTagList(){  // 初始化 子组件(筛选列表) 的选择数据
-       this.$refs.districtTag.setSelected(this.selectedObj)
+       this.$refs.regionTag.setSelected(this.selectedObj)
        this.$refs.wineTag.setSelected(this.selectedObj)
        this.$refs.grapeTag.setSelected(this.selectedObj)
       },
@@ -146,7 +161,10 @@ export default {
     //=================当前 组件 事件触发函数 =========================
       submitClickHandle(){
         this.filterShow=false; // 关闭筛选器
-          this.initTabBar()
+        this.initTabBar();
+        this.$nextTick(()=>{  // 加载列表数据
+          this.reslutDataLoad()
+        })
       },
 
       resetClickHandle(){  // 重置 筛选器
@@ -159,16 +177,57 @@ export default {
     //=================当前 组件 事件触发函数(完结) =========================
 
     //=================结果列表数据加载===========================
-      reslutDataLoad(){
+      reslutDataLoad(){  // 列表加载数据函数
+        let formObj={};
+        _.forIn(this.selectedObj,(val,key)=>{
+          if(val){
+            formObj[key]=val
+          }else{
+            formObj[key]="0"
+          }
+        });
+        let newObj = Object.assign({},this.stableData,formObj,{page:this.pageIndex})
+        console.log(newObj);
+        $.ajax({
+          url:'http://zyshi.9kacha.com/AutoRecommWines/toBfindWine/findWine.php',
+          type:'POST',
+          data:{'jparams':JSON.stringify(newObj) },
+          success:(data)=>{
+            this.stopScrollRequest=false; // 关闭开关
+            var res = JSON.parse(data);
+            this.$nextTick(()=>{
+              this.getDataCb(res);
+            })
 
-      }
+          },
+          error:(err)=>{
+            this.isNoResult=true //没有数据
+            console.log(err);
+          }
+        });
+      },
 
+      getDataCb(res){ //
+        if(res.description=="ok"){
+          if(res.jsonData.length>0){
+            let newArr=this.resultList
+            this.resultList=newArr.concat(res.jsonData);
+            if(res.jsonData.length<10){
+              this.isNoMore=true  // 已经结束
+            }
+          }
+        }else{
+          this.isNoMore = true
+          this.isNoResult=true // 没有数据
+        }
+      },
+    //=================结果列表数据加载(完结)===========================
 
 
 
   },
   components:{
-    Tabbar,Popup,Filterlist, Scroller
+    Tabbar,Popup,Filterlist, Scroller,ResultItem
   },
   mounted(){
     // 判断页面的scrollTop（是否有记录）
@@ -302,6 +361,13 @@ export default {
 
 .list-wrap{
   width:100%;
+  box-sizing: border-box;
+  padding:1rem 1rem;
+}
+.list-wrap .result-list{
+  box-sizing: border-box;
+  padding:0; margin:0;
+ /* padding:1rem 0.5rem 3rem 0.5rem;*/
 }
 .list-wrap .no-result, .list-wrap .add-more{
   width:100%; height:2rem; line-height: 2rem;

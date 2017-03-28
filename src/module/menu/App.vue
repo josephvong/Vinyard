@@ -5,7 +5,7 @@
     <div class="main-menu">
       <div class="left-menu">
         <ul class="cata-list" ref="cataList">
-          <li  class="active" catalog-type="district" v-on:click="leftItemClick()" >产区<br/>分类</li>
+          <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区<br/>分类</li>
           <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒类型<br/>分类</li>
           <li catalog-type="grape" v-on:click="leftItemClick()">葡萄品种<br/>分类</li>
           <li  v-on:click="leftItemClick()">价格区间<br/>分类</li>
@@ -21,11 +21,8 @@
 </template>
 
 <script>
-// const DIST="district"
-// const WINE="wine_type"
-// const GRAP="grape"
 
-const catalogTitle={"district":"产区","wine_type":"葡萄酒类型","grape":"葡萄品种"}
+const catalogTitle={"region":"产区","wine_type":"葡萄酒类型","grape":"葡萄品种"}
 import $ from "jquery"
 import Vue from "vue"
 import Banner from "components/Banner/Banner.vue"
@@ -35,7 +32,7 @@ export default {
   name: 'app',
   data(){
     return {
-      catalogName:catalogTitle["district"],
+      catalogName:catalogTitle["region"],
       eventHub:new Vue()
     }
   },

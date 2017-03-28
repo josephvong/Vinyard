@@ -9,8 +9,8 @@ import 'es6-promise/auto'
 //import appstore from './vuex/appstore'
 
 // 加载样式
-import "../../common/css/reset.css"
-import "../../common/css/cusstyle.css"
+import "common/css/reset.css"
+import "common/css/cusstyle.css"
 
 
 /*-------三种方法 使用ajax 发送请求---------*/

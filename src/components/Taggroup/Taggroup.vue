@@ -25,7 +25,7 @@ export default {
   },
   data(){
     return {
-      catalogName:"district",
+      catalogName:"region",
     }
   },
   computed:{

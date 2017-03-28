@@ -1,5 +1,5 @@
 const tagData={
-	"district":{
+	"region":{
 		title:"地区",
 		list:[
 			{'name_ch':'卡拉布里亚','name_en':''},

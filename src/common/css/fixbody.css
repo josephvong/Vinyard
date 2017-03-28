@@ -1,0 +1,7 @@
+html,body{
+  position: relative;
+  width: 100%;
+  max-width:640px;
+  margin: 0 auto;
+  background: #F3F5F7;
+}

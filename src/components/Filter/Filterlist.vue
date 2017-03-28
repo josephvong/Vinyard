@@ -1,8 +1,8 @@
 <template>
-  <div class="tag-list">
+  <div class="filter-list">
     <h3 class="title">{{tagsData.title}}</h3>
     <div class="tag-wrap">
-      <div class="col" v-for="(tag,index) in tagsData.list" v-show="tagShow||index<8" >
+      <div class="col" v-for="(tag,index) in tagsData.list" v-show="showToggle||index<8" >
         <div class="tag" v-bind:class="[{tag:true},{active:tag.name_ch==selectedId}]" ref="tag"
               v-bind:tId="tag.name_ch"  v-bind:catalogName="catalogName"  v-on:click="TagClickHandle($event)"
         >
@@ -14,7 +14,7 @@
       </div>
     </div>
     <!--<input type="text" value="" /> -->
-    <a v-show="isExpress" v-on:click="ExpressClickHandle()" class="express">{{tagShow?"收起":"更多"}}</a>
+    <a v-on:click="ExpressClickHandle()" class="express">{{showToggle?"收起":"更多"}}</a>
   </div>
 </template>
 
@@ -22,92 +22,67 @@
 import tagData from "common/tagData"
 import $ from "jquery"
 export default {
-  name: 'taglist',
+  name: 'filterlist',
   props:{
     catalogName:{
       type:String,
       default:""
     },
-    isExpress:{  // 是否有展开功能 (true有，false无)
-      type:Boolean,
-      default:false
-    },
-    /*selectedObj:{
-      type:Object,
-    },*/
     eventHub:{
       type:Object
     }
   },
   data(){
     return {
-      tagsData:tagData[this.catalogName],
+      tagsData:tagData[this.catalogName],  // 列表数据
       showToggle:false, // 默认隐藏
       selectedId:null,  // 选中的ID
     }
   },
   computed:{
-    tagShow(){
-      if(this.isExpress){ // 有展开功能
-        if(this.showToggle){
-          return true
-        }else{
-          return false
-        }
-      }else{  // 无展开功能
-        return true // 全部显示
-      }
-    },
+    selectedId(){
+      return this.selectedObj[this.catalogName]
+    }
   },
   components:{
-     //Tag
+
   },
   methods:{
     ExpressClickHandle(){
       this.showToggle=!this.showToggle
+      this.$nextTick(()=>{
+        this.eventHub.$emit("scrollerRefresh");
+      })
       return this.showToggle
     },
+
     TagClickHandle(event){
       // 获取点击对象的数据
       let catalogName=event.target.getAttribute('catalogName');
       let tId=event.target.getAttribute('tId');
-      if(this.isExpress){  // 多选
-
-        this.eventHub.$emit("modifySelection",catalogName,tId); // 将点击的标签数据提交给父级组件
-
-      }else{    // 单选
-        // 直接转跳页面
-        let path = this.$route.path
-        window.history.pushState({"path":path},"","");  // 设置 浏览器历史
-        window.localStorage.setItem('selectedObj','{"'+catalogName+'":"'+tId+'"}') // 设置 本地存储
-        window.location.href="/module/result.html";  // 直接转跳
-
-      }
+      this.eventHub.$emit("modifySelection",catalogName,tId); // 将点击的标签数据提交给父级组件
     },
-
     setSelected(obj){
       this.selectedId = obj[this.catalogName]
     },
-
-
   },
   watch:{
 
   },
   mounted(){
-
+    //console.log(this.selectedObj)
   }
 }
 </script>
 
 <style scpoed rel="stylesheet/css">
-.tag-list{
+.filter-list{
   position: relative;
   width:100%;
   border-bottom:1.5rem solid rgba(0,0,0,0);/*blue;*/
   margin-bottom: 0.5rem;
 }
-.tag-list .express{
+.filter-list .express{
     position: absolute;
     display: inline-block;
     right:1rem; bottom:-1rem; line-height: 1.5rem;
@@ -115,18 +90,19 @@ export default {
 
 }
 
-.tag-list .title{
+.filter-list .title{
   height:2rem; line-height: 2rem;
-  font-size: 1rem;
+  font-size: 1.4rem;
   padding-left: 0.5rem;
   border-left:3px solid #B91C36;
 }
 
-.tag-list .tag-wrap{
+.filter-list .tag-wrap{
   width:100%; max-width:100%;
   padding-left:0.2rem;
 
-  display:-webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex;
+  display:-webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex;
+  display: flex;
 
   box-orient:horizontal;-webkit-box-orient:horizontal; box-lines:multiple;-webkit-box-lines:multiple;
 
@@ -136,17 +112,18 @@ export default {
   justify-content:left; -webkit-justify-content:left;
   box-pack:left;-webkit-box-pack:left;-moz-box-pack:left;
 }
-.col{
+.filter-list .tag-wrap .col{
     display: block;
-    box-flex:1; -webkit-box-flex:1;
+
     flex-grow:0;
     flex-shrink:1;
     flex-basis:auto;
     text-align: center;
     padding:0.5rem 0.5rem;
 }
-.col .tag{
+.filter-list .tag-wrap .col .tag{
   display: inline-block;
+  box-sizing: border-box;
   width:100%;
 
   padding:0.5rem 1.2rem;
@@ -155,11 +132,11 @@ export default {
   color:#545454;
   background: white;
 }
-.col .tag span{
+.filter-list .tag-wrap .col .tag span{
   display: block;
-  width:100%; line-height: 2rem;font-size: 1.2rem;
+  width:100%; line-height: 2rem;font-size:1.2rem;
 }
-.col .tag.active{
+.filter-list .tag-wrap .col .tag.active{
     color:white;
     background: #B91C36;
 }

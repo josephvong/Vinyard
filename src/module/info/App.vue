@@ -2,9 +2,9 @@
   <div class="app" ref="infoApp" >
     <!-- 顶部栏 -->
     <Tabbar v-bind:eventHub="eventHub"  ref="tabbar" ></Tabbar>
-    <div class="list-wrap">
+    <div class="list-wrap" ref="resultList">
 
-      <ul class="result-list" ref="resultList">
+      <ul class="result-list" >
         <ResultItem v-for="(item,index) in resultList"
                   v-bind:infoObj="item" v-bind:key="index"
                   v-bind:eventHub="eventHub"
@@ -21,7 +21,7 @@
           <a class="close-filter" v-on:click="closeFilter()">x</a>
           <scroller lock-x  ref="filterScroll" >
             <div class="select-wrap">
-              <Filterlist catalogName="region"  ref="regionTag"
+              <Filterlist catalogName="region" ref="regionTag"
                           v-bind:eventHub="eventHub" v-bind:selectedObj="selectedObj"
               ></Filterlist>
               <Filterlist catalogName="wine_type" ref="wineTag"
@@ -35,8 +35,8 @@
           </scroller>
 
           <div class="bottom">
-            <a class="btn" v-on:click="submitClickHandle()" >提交</a>
             <a class="btn" v-on:click="resetClickHandle()"  >重置</a>
+            <a class="btn" v-on:click="submitClickHandle()" >提交</a>
           </div>
       </div>
     </popup>
@@ -100,7 +100,6 @@ export default {
       },
     //=============筛选器打开关闭函数(完结)===========
 
-
     // ================动态改变 选择数据 的函数====================
       modifySelection(catalogName,tId){ // 子组件筛选器中点击每个标签 触发 modify函数
         if(this.selectedObj[catalogName]){
@@ -121,16 +120,16 @@ export default {
         if(this.selectedObj[catalogName]==tId){
           this.selectedObj[catalogName] = null
         }
-
         this.$nextTick(()=>{
-          this.initTagList();
-          this.initTabBar();
-
-          $(window).scrollTop(0)
-          this.resultList=[];
-          this.pageIndex = 1;
-
-          // 此处 加载数据之前必须重置一下其他列表状态数据
+          this.initTagList(); // 更新筛选器状态
+          this.initTabBar(); // 更新顶部symbol状态
+          //-----------重置列表状态--------------
+          $(window).scrollTop(0) // 返回顶部
+          this.resultList=[]; // 清空结果列表数据
+          this.pageIndex = 1; // 重置页码
+          this.isNoResult=false; //  重置noResult状态
+          this.isNoMore=false;   //  重置noMore状态
+          //------------重置列表状态（完）-----------
           this.reslutDataLoad()// 加载数据
         })
       },
@@ -158,20 +157,19 @@ export default {
       tabbarFixedHead(num){  // 父组件自动调整 顶部填充
         $(this.$refs.infoApp).css("padding-top",num)
       },
-
-    // 初始化 子组件（resultList）的选择数据
-     //initResultList(){}
     //======子组件动态数据（选项数据）更新函数（完结）==========
 
     //=================当前 组件 事件触发函数 =========================
       submitClickHandle(){
         this.filterShow=false; // 关闭筛选器
         this.initTabBar();
-
+        //-----------重置列表状态--------------
+        $(window).scrollTop(0) // 返回顶部
         this.resultList=[]; // 清空结果列表数据
-        this.pageIndex = 1;
-        $(window).scrollTop(0)
-
+        this.pageIndex = 1; // 重置页码
+        this.isNoResult=false; //  重置noResult状态
+        this.isNoMore=false;   //  重置noMore状态
+        //-----------重置列表状态（完结）--------------
         this.$nextTick(()=>{  // 加载列表数据
           this.reslutDataLoad()
         })
@@ -189,7 +187,7 @@ export default {
     //=================结果列表数据加载===========================
       reslutDataLoad(){  // 列表加载数据函数
         let formObj={};
-        _.forIn(this.selectedObj,(val,key)=>{
+        _.forIn(this.selectedObj,(val,key)=>{ // 格式化选择标签的数据json
           if(val){
             formObj[key]=val
           }else{
@@ -197,7 +195,6 @@ export default {
           }
         });
         let newObj = Object.assign({},this.stableData,formObj,{page:this.pageIndex})
-        console.log(newObj);
         $.ajax({
           url:'http://zyshi.9kacha.com/AutoRecommWines/toBfindWine/findWine.php',
           type:'POST',
@@ -217,7 +214,7 @@ export default {
         });
       },
 
-      getDataCb(res){ //
+      getDataCb(res){ // 获取数据后的回调函数（拼接结果数组）
         if(res.description=="ok"){
           if(res.jsonData.length>0){
             let newArr=this.resultList
@@ -238,24 +235,35 @@ export default {
         let viewHeight=$(window).height();
         let listHeight = $(this.$refs.resultList).outerHeight();
         let overTop=listHeight-viewHeight; // >0 or not
-        let btmHeight=$(window).scrollTop()-overTop;
-        if(btmHeight > 0){
-          /*console.log(btmHeight)*/
+        let btmHeight=overTop-$(window).scrollTop();
+        if(btmHeight < -20 ){
+          //console.log(btmHeight)
           if(!this.stopScrollRequest){
             this.stopScrollRequest=true;
             this.pageIndex+=1;
             this.reslutDataLoad();
           }
         }
-      }
+      },
     //================================================================
 
+    //===================页面 状态缓存函数===========================
+      savePageStatus(){
+        window.localStorage.setItem('selectedObj',JSON.stringify(this.selectedObj));
+        window.localStorage.setItem('resultList',JSON.stringify(this.resultList));
+        window.localStorage.setItem('pageIndex',this.pageIndex);
+        window.localStorage.setItem('scrollTop',$(window).scrollTop());
+      },
+    //==================================================================
   },
   components:{
     Tabbar,Popup,Filterlist, Scroller,ResultItem
   },
   mounted(){
     // 判断页面的scrollTop（是否有记录）
+    if(window.localStorage.getItem("scrollTop")){
+      $(window).scrollTop(window.localStorage.getItem("scrollTop"))
+    }
 
     // 判断是否有 resultList 记录，如果没有，加载数据
     if(!window.localStorage.getItem("resultList")){
@@ -298,9 +306,14 @@ export default {
        this.removeSelection(catalogName,tId)
     })
 
-    //
+    // 监听 tabbar 组件 发送的 调整padding-top 事件
     this.eventHub.$on("tabbarFixedHead",(tabHeight)=>{
       this.tabbarFixedHead(tabHeight);
+    });
+
+    // 监听 resultItem 组件发送的 记录 页面状态 事件
+    this.eventHub.$on("savePageStatus",(tabHeight)=>{
+      this.savePageStatus();
     });
 
     // 清空 本地缓存
@@ -316,6 +329,9 @@ export default {
       }
       if(window.localStorage.getItem("pageIndex")){
          window.localStorage.removeItem("pageIndex")
+      }
+      if(window.localStorage.getItem("scrollTop")){
+         window.localStorage.removeItem("scrollTop")
       }
     })
 
@@ -342,12 +358,13 @@ export default {
   display: block;
   padding:0;
   position: absolute;
-  right:0.2rem; top:0.2rem;
-  width:1.4rem; height:1.4rem; line-height: 1.4rem;
-  font-size: 1.4rem;
+  right:1rem; top:1rem;
+  width:3rem; height:3rem; line-height:3rem;
+  font-size: 2rem;
   text-align: center;
   font-weight: 700;
   color:gray;
+  z-index: 3;
 }
 .filter-wrap .select-wrap{
   width:100%;

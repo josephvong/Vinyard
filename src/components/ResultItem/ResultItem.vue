@@ -50,13 +50,18 @@ export default {
     wineryClickHandle(){
       let link = event.target.getAttribute("link");
       this.eventHub.$emit("savePageStatus");
-      window.open(link)
+      this.$nextTick(()=>{
+        window.open(link)
+      })
     },
     detailClickHandle(){
       let wine_id = event.target.getAttribute("wine_id");
       let sign = event.target.getAttribute("sign");
       this.eventHub.$emit("savePageStatus");
-      window.open('http://h5.9kacha.com/index.php/Wine/custom_detail?wine_id='+wine_id+'&sign='+sign+'&from=2b')
+      this.$nextTick(()=>{
+        window.open('http://h5.9kacha.com/index.php/Wine/custom_detail?wine_id='+wine_id+'&sign='+sign+'&from=2b')
+      })
+
     }
   },
   components:{
@@ -99,9 +104,9 @@ export default {
     overflow-x:hidden;
 }
 .result-item .item-wrap .left .thumb{
-    position: absolute;
-    width:100%;
-    top:0;bottom:0;
+    /*position: absolute;*/
+    width:100%; height:100%;
+    /*top:0;bottom:0;*/
     overflow-x:hidden;
 
     display:-webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex;
@@ -121,7 +126,6 @@ export default {
     height:10rem; width:auto;
     align-self:center;
    /* margin:0 auto;*/
-
 }
 .result-item .item-wrap .content-wrap{
     display: block;
@@ -129,7 +133,10 @@ export default {
     flex-grow:0;
     flex-shrink:1;
     flex-basis:auto;
-    padding:0 0.5rem;
+    padding:0 1rem;
+}
+.result-item .item-wrap .content-wrap p{
+  padding:0; margin:0;
 }
 .result-item .item-wrap .content-wrap .c-name{
     display:-webkit-box;

@@ -5,11 +5,11 @@
     <div class="main-menu">
       <div class="left-menu">
         <ul class="cata-list" ref="cataList">
-          <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区<br/>分类</li>
-          <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒类型<br/>分类</li>
-          <li catalog-type="grape" v-on:click="leftItemClick()">葡萄品种<br/>分类</li>
-          <li  v-on:click="leftItemClick()">价格区间<br/>分类</li>
-          <li  v-on:click="leftItemClick()">综合<br/>分类</li>
+          <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区<br/>类型</li>
+          <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒<br/>类型</li>
+          <li catalog-type="grape" v-on:click="leftItemClick()">葡萄<br/>类型</li>
+          <li  v-on:click="leftItemClick()">价格<br/>类型</li>
+          <li  v-on:click="leftItemClick()">综合<br/>类型</li>
         </ul>
       </div>
       <div class="right-menu">
@@ -61,6 +61,24 @@ export default {
   },
   mounted(){
 
+    // 清空 从info页面中 回来时留着的缓存
+    this.$nextTick(function(){
+      if(window.localStorage.getItem("selectedObj")){
+        window.localStorage.removeItem("selectedObj")
+      }
+      if(window.localStorage.getItem("fromMenu")){
+        window.localStorage.removeItem("fromMenu")
+      }
+      if(window.localStorage.getItem("resultList")){
+        window.localStorage.removeItem("resultList")
+      }
+      if(window.localStorage.getItem("pageIndex")){
+         window.localStorage.removeItem("pageIndex")
+      }
+      if(window.localStorage.getItem("scrollTop")){
+         window.localStorage.removeItem("scrollTop")
+      }
+    })
   }
 }
 </script>
@@ -91,8 +109,8 @@ export default {
     flex-flow:row no-wrap
     justify-content: flex-start
     .left-menu
-      flex: 1 0 8rem
-      width:8rem
+      flex: 1 0 6rem
+      width:6rem
       height:100%
       overflow: auto;
       -webkit-overflow-scrolling: touch;
@@ -101,12 +119,12 @@ export default {
         &>li
           position:relative
           width:100%
-          padding:1rem 0;
+          padding:0.5rem 0;
           line-height:2rem;
           font-size:1.4rem;
           text-align:center;
           background:white;
-          border-bottom:1rem solid #F3F5F7;
+          border-bottom:0.5rem solid #F3F5F7;
         &>li.active
           background:#F3F5F7;
         &>li.active:before

@@ -85,8 +85,9 @@ export default {
 .filter-list .express{
     position: absolute;
     display: inline-block;
-    right:1rem; bottom:-1rem; line-height: 1.5rem;
-    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    right:2rem; bottom:-3rem; line-height: 2rem;
+    font-size: 1.4rem;
 
 }
 

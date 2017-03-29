@@ -2,11 +2,10 @@
   <div class="tabbar-wrap">
     <div class="tabbar" ref="tabbar">
       <div class="symbol-wrap">
-        <span class="symbol" v-for="(item,index) in symbolArr" v-show="item.tId"
-              v-bind:catalogName="item.catalogName" v-bind:tId="item.tId"
-              v-on:click="tagClickHandle()"
-        >
+        <span class="symbol" v-for="(item,index) in symbolArr" v-show="item.tId">
            {{item.tId}}
+           <em class="close" v-bind:catalogName="item.catalogName" v-bind:tId="item.tId"
+              v-on:click="tagClickHandle()">x</em>
         </span>
       </div>
 
@@ -77,8 +76,6 @@ export default {
         this.eventHub.$emit("tabbarFixedHead",tabHeight);
       })
     },
-
-
   },
   components:{
 
@@ -94,11 +91,10 @@ export default {
 
 <style scpoed rel="stylesheet/css">
 .tabbar-wrap{
-    position: fixed;
-    top:0;left:0;
-    width: 100%;
-    z-index: 5;
-
+  position: fixed;
+  top:0;left:0;
+  width: 100%;
+  z-index: 5;
 }
 .tabbar-wrap .tabbar{
     position:relative;
@@ -110,38 +106,46 @@ export default {
 .tabbar-wrap .tabbar .filter-open{
   position: absolute;
   right:0.5rem; top:0.25rem;
-  width:2rem; height:2rem; line-height: 2rem;
+  width:2.8rem; height:2.8rem; line-height: 2.8rem;
   font-size: 1.4rem;
   text-align: center;
   border-radius: 50%;
   background: blue;
-  z-index: 3
+  z-index: 3;
 }
 .tabbar-wrap .tabbar .symbol-wrap{
   width:90%;min-height: 2.4rem;
+  padding:0.5rem 0rem;
 }
 .tabbar-wrap .tabbar .symbol-wrap .symbol{
-    display: inline-block;
-    position: relative;
-    height:2rem; line-height: 2rem;
-    font-size: 1.2rem;
-    text-align: center;
-    padding:0 0.8rem;
-    margin:0.5rem 0.25rem;
-    border-radius:8px;
-    background: red;
+  display: inline-block;
+  position: relative;
+  height:2rem; line-height: 2rem;
+  font-size: 1.2rem;
+  text-align: center;
+  padding:0rem 2rem 0rem 0.8rem;
+  margin:0.5rem 0.25rem;
+  border-radius:6px;
 }
-/*.tabbar-wrap .tabbar .tag-list .top-tag:nth-of-type(1){background:#289341; color:white; }
-.tabbar-wrap .tabbar .tag-list .top-tag:nth-of-type(2){background:white ;color:#A5A5A5; border:1px solid #A5A5A5;}
-.tabbar-wrap .tabbar .tag-list .top-tag:nth-of-type(2) .close{color:#A5A5A5;}
-.tabbar-wrap .tabbar .tag-list .top-tag:nth-of-type(3){background:#E31C15; color:white;}
-
-.tag-header-wrap .header .top-tag .close{
-    position: absolute; display: block;
-    right:0.2rem; top:0%;
-    height: 1rem;width:1rem; font-size: 1rem;
-    color:white;
-}*/
+.tabbar-wrap .tabbar .symbol-wrap .symbol:nth-of-type(1){
+  border:1px solid #C37CD0;
+  color:#C37CD0;
+}
+.tabbar-wrap .tabbar .symbol-wrap .symbol:nth-of-type(2){
+  border:1px solid #F06292;
+  color:#F06292;
+}
+.tabbar-wrap .tabbar .symbol-wrap .symbol:nth-of-type(3){
+  border:1px solid #FF8C68;
+  color:#FF8C68;
+}
+.tabbar-wrap .tabbar .symbol-wrap .close{
+  font-style: normal;
+  position: absolute; display: block;
+  right:0.2rem; top:20%;
+  height: 1.4rem; width:1.4rem; font-size: 1.4rem;
+  margin-top: -0.5rem;
+}
 
 .clearfix:after,.clearfix:before{ content:""; display:table;}
 .clearfix:after{ clear:both;}

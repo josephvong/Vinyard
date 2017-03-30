@@ -1,4 +1,4 @@
-const tagData={
+const italyData={
 	"region":{
 		title:"地区",
 		list:[
@@ -79,4 +79,4 @@ const tagData={
 		]
 	}
 }
-export default tagData
+export default italyData

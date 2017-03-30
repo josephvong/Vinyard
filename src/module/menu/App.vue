@@ -5,11 +5,11 @@
     <div class="main-menu">
       <div class="left-menu">
         <ul class="cata-list" ref="cataList">
-          <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区<br/>类型</li>
-          <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒<br/>类型</li>
-          <li catalog-type="grape" v-on:click="leftItemClick()">葡萄<br/>类型</li>
-          <li  v-on:click="leftItemClick()">价格<br/>类型</li>
-          <li  v-on:click="leftItemClick()">综合<br/>类型</li>
+          <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区</li>
+          <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒</li>
+          <li catalog-type="grape" v-on:click="leftItemClick()">葡萄品种</li>
+          <li  v-on:click="leftItemClick()">价格</li>
+          <li  v-on:click="leftItemClick()">综合多选</li>
         </ul>
       </div>
       <div class="right-menu">
@@ -32,6 +32,7 @@ export default {
   name: 'app',
   data(){
     return {
+      country:this.getUrlParam("country"),
       catalogName:catalogTitle["region"],
       eventHub:new Vue()
     }
@@ -51,16 +52,20 @@ export default {
         this.$refs.taggroup.changeCatalogName(catName)
       }else{
         window.localStorage.setItem('fromMenu',"ok"); // 设置 从 menu 页面进入的判定
-        window.location.href="/module/info.html"
+        window.location.href="/module/info.html?country="+this.country
       }
 
+    },
+    getUrlParam(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+      if (r != null) return unescape(r[2]); return null; //返回参数值
     }
   },
   components:{
     Banner,Taggroup
   },
   mounted(){
-
     // 清空 从info页面中 回来时留着的缓存
     this.$nextTick(function(){
       if(window.localStorage.getItem("selectedObj")){
@@ -120,11 +125,11 @@ export default {
           position:relative
           width:100%
           padding:0.5rem 0;
-          line-height:2rem;
+          line-height:4rem;
           font-size:1.4rem;
           text-align:center;
           background:white;
-          border-bottom:0.5rem solid #F3F5F7;
+          border-bottom:1.5rem solid #F3F5F7;
         &>li.active
           background:#F3F5F7;
         &>li.active:before
@@ -138,7 +143,7 @@ export default {
     .right-menu
       flex: 1 1 auto
       height:100%
-      padding:1rem
+      padding:1rem 0rem 0rem 1.5rem;
       overflow: auto;
       -webkit-overflow-scrolling: touch;
 

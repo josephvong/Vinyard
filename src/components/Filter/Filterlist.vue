@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import tagData from "common/tagData"
+// import tagData from "common/tagData"
+import {countryData} from "country"
 import $ from "jquery"
 export default {
   name: 'filterlist',
@@ -34,7 +35,8 @@ export default {
   },
   data(){
     return {
-      tagsData:tagData[this.catalogName],  // 列表数据
+      country:this.getUrlParam("country"),
+      //tagsData:tagData[this.catalogName],  // 列表数据
       showToggle:false, // 默认隐藏
       selectedId:null,  // 选中的ID
     }
@@ -42,6 +44,9 @@ export default {
   computed:{
     selectedId(){
       return this.selectedObj[this.catalogName]
+    },
+    tagsData(){
+      return countryData[this.country][this.catalogName]
     }
   },
   components:{
@@ -65,12 +70,18 @@ export default {
     setSelected(obj){
       this.selectedId = obj[this.catalogName]
     },
+    // 获取链接字段
+    getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
   },
   watch:{
 
   },
   mounted(){
-    //console.log(this.selectedObj)
+
   }
 }
 </script>
@@ -100,7 +111,7 @@ export default {
 
 .filter-list .tag-wrap{
   width:100%; max-width:100%;
-  padding-left:0.2rem;
+  padding-left:1rem;
 
   display:-webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex;
   display: flex;

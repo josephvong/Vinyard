@@ -49,6 +49,7 @@ import "common/css/reset.css"
 import "common/css/cusstyle.css"
 
 import { Popup, Scroller  } from 'vux'
+import {countryName} from "country"
 
 import $ from "jquery"
 import Vue from "vue"
@@ -79,7 +80,7 @@ export default {
       stableData:{  // 列表加载API 固定参数
         "authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
         "authmode":"app",
-        "country":"意大利",
+        "country":countryName[this.getUrlParam("country")],// 国家名
         "cookie":"940158d239561338e"//window.localStorage.getItem("userCookie")
       },
 
@@ -93,7 +94,10 @@ export default {
   methods:{
     //===============筛选器打开关闭函数================
       openFilter(){   // 打开筛选器函数
-        this.filterShow=true
+        this.filterShow=true;
+        this.$nextTick(() => {
+          setTimeout(()=>{this.$refs.filterScroll.reset()},500)
+        })
       },
       closeFilter(){  // 关闭筛选器
         this.filterShow=false
@@ -255,11 +259,21 @@ export default {
         window.localStorage.setItem('scrollTop',$(window).scrollTop());
       },
     //==================================================================
+
+    //====================获取页面链接的国家参数==============================
+    // 获取链接字段
+    getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+    //=======================================================================
   },
   components:{
-    Tabbar,Popup,Filterlist, Scroller,ResultItem
+    Tabbar,Popup,Filterlist, ResultItem, Scroller,
   },
   mounted(){
+    //console.log(countryName[this.getUrlParam("country")]);
     // 判断页面的scrollTop（是否有记录）
     if(window.localStorage.getItem("scrollTop")){
       $(window).scrollTop(window.localStorage.getItem("scrollTop"))
@@ -272,12 +286,17 @@ export default {
 
     // 如果没有选项数据的本地存储（综合查询）
     if(!window.localStorage.getItem("selectedObj") && window.localStorage.getItem("fromMenu")=="ok" ){
-      this.$nextTick(() => {this.filterShow=true})
+      this.$nextTick(() => {
+        this.filterShow=true;
+      })
     }
 
     // 根据 selectedObj 初始化子组件
     this.initTagList();  //初始化选择TagList 子组件
     this.initTabBar(); //初始化 Tabbar 子组件(显示symbol)
+    this.$nextTick(() => {
+      setTimeout(()=>{this.$refs.filterScroll.reset()},500)
+    })
 
     // 监听 window.scroll
     $(window).on("scroll",()=>{
@@ -287,7 +306,7 @@ export default {
     // 监听 filterList 展开后 发送的 scrollerRefresh 事件
     this.eventHub.$on("scrollerRefresh",()=>{
       this.$nextTick(() => {
-        this.$refs.filterScroll.reset();
+        this.$refs.filterScroll.reset({"top":0});
       })
     })
 
@@ -365,6 +384,10 @@ export default {
   font-weight: 700;
   color:gray;
   z-index: 3;
+}
+.filter-wrap .scroller-wrap{
+  width:100%; height:100%;
+  overflow-y: scroll;
 }
 .filter-wrap .select-wrap{
   width:100%;

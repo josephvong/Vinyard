@@ -1,28 +1,12 @@
-const tagData={
+const franceData={
 	"region":{
 		title:"地区",
 		list:[
-			{"name_ch":"托斯卡纳","name_en":"Tuscany"},
-			{"name_ch":"维纳图","name_en":"Veneto"},
-			{"name_ch":"艾米利亚-罗马涅","name_en":"Emilia-Romagna"},
-			{"name_ch":"瓦莱塔奥斯塔","name_en":"Aosta Valley"},
-			{"name_ch":"皮埃蒙特","name_en":"Piedmont"},
-			{"name_ch":"西西里岛","name_en":"Sicily"},
-			{"name_ch":"撒丁岛","name_en":"Sardinia"},
-			{"name_ch":"弗留利-威尼斯朱利亚","name_en":"Friuli-Venezia Giulia"},
-			{"name_ch":"普利亚","name_en":"Puglia"},
-			{"name_ch":"伦巴第","name_en":"Lombardy"},
-			{"name_ch":"马尔奇","name_en":"Marche"},
-			{"name_ch":"阿布鲁佐","name_en":"Abruzzo"},
-			{"name_ch":"拉齐奥","name_en":"Lazio"},
-			{"name_ch":"巴斯利卡塔","name_en":"Basilicata"},
-			{"name_ch":"卡拉布里亚","name_en":"Calabria"},
-			{"name_ch":"利古里亚","name_en":"Liguria"},
-			{"name_ch":"坎帕尼亚","name_en":"Campania"},
-			{"name_ch":"特伦蒂诺-上阿迪杰","name_en":"Trentino-Alto Adige"},
-			{"name_ch":"翁布里亚","name_en":"Umbria"},
-			{"name_ch":"莫利塞","name_en":"Molise"},
-			{"name_ch":"圣马力诺产区","name_en":"San Marino"},
+			{"name_ch":"波尔图","name_en":""},
+			{"name_ch":"马赛","name_en":""},
+			{"name_ch":"里昂","name_en":""},
+			{"name_ch":"圣艾蒂安","name_en":""},
+
 		]
 	},
 	"wine_type":{
@@ -79,4 +63,4 @@ const tagData={
 		]
 	}
 }
-export default tagData
+export default franceData

@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import tagData from "common/tagData"
+// import tagData from "common/tagData"
+import {countryData} from "country"
 export default {
   name: 'taggroup',
   props:{
@@ -25,12 +26,13 @@ export default {
   },
   data(){
     return {
+      country:this.getUrlParam("country"),
       catalogName:"region",
     }
   },
   computed:{
     tagsData(){
-      return tagData[this.catalogName]
+      return countryData[this.country][this.catalogName]
     }
   },
   components:{
@@ -45,8 +47,17 @@ export default {
       let tId = event.target.getAttribute("tId");
       window.localStorage.setItem('selectedObj','{"'+catName+'":"'+tId+'"}') // 设置 本地存储
       window.localStorage.setItem('fromMenu',"ok"); // 设置 从 menu 页面进入的判定
-      window.location.href="/module/info.html"//?catalogName="+catName+"&tId="+tId
+      window.location.href="/module/info.html?country="+this.country
+    },
+    // 获取链接字段
+    getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
     }
+
+
+
 
 
   },
@@ -54,7 +65,6 @@ export default {
 
   },
   mounted(){
-
   }
 }
 </script>
@@ -96,6 +106,7 @@ export default {
 .tag span{
   display: block;
   width:100%; line-height: 2rem;font-size: 1.2rem;
+  text-align: center;
 }
 /*.col .tag.active{
     color:white;

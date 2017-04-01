@@ -44,6 +44,23 @@ export default {
   },
   methods:{
     leftItemClick(){
+      // 清空 从info页面中 回来时留着的缓存
+      if(window.localStorage.getItem("selectedObj")){
+        window.localStorage.removeItem("selectedObj")
+      }
+      if(window.localStorage.getItem("fromMenu")){
+        window.localStorage.removeItem("fromMenu")
+      }
+      if(window.localStorage.getItem("resultList")){
+        window.localStorage.removeItem("resultList")
+      }
+      if(window.localStorage.getItem("pageIndex")){
+         window.localStorage.removeItem("pageIndex")
+      }
+      if(window.localStorage.getItem("scrollTop")){
+         window.localStorage.removeItem("scrollTop")
+      }
+
       let catName = event.target.getAttribute("catalog-type");
       $(this.$refs.cataList).find("li").removeClass("active");//.getElementsByTagName("li").
       $(event.target).addClass("active");
@@ -97,16 +114,19 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  background:#F3F5F7;
+  // background:#F3F5F7;
+  background:white;
   .type-header
     width:100%
     font-size:2rem;
-    line-height:2.4rem;
+    height:3rem;
+    line-height:2.8rem;
     margin-top:8rem
     text-align:center
+    border-bottom:1px solid rgba(0,0,0,0.1);
   .main-menu
     position:absolute
-    top:10.4rem
+    top:11rem
     left:0
     right:0
     bottom:0
@@ -114,11 +134,14 @@ export default {
     flex-flow:row no-wrap
     justify-content: flex-start
     .left-menu
-      flex: 1 0 6rem
-      width:6rem
+      flex: 1 0 8rem
+      width:8rem
+      padding-top:1rem;
       height:100%
       overflow: auto;
       -webkit-overflow-scrolling: touch;
+      background:#F3F5F7;
+      // background: #E5E5E5;
       .cata-list
         width:100%;
         &>li
@@ -128,10 +151,13 @@ export default {
           line-height:4rem;
           font-size:1.4rem;
           text-align:center;
-          background:white;
-          border-bottom:1.5rem solid #F3F5F7;
-        &>li.active
+          border-bottom:1px solid rgba(0,0,0,0.1);
           background:#F3F5F7;
+          // background: #E5E5E5;
+        &>li:nth-of-type(1)
+          border-top:1px solid rgba(0,0,0,0.1);
+        &>li.active
+          background:white;
         &>li.active:before
           content:""
           position:absolute
@@ -143,7 +169,7 @@ export default {
     .right-menu
       flex: 1 1 auto
       height:100%
-      padding:1rem 0rem 0rem 1.5rem;
+      padding:1rem 0rem 0rem 0.8rem;
       overflow: auto;
       -webkit-overflow-scrolling: touch;
 

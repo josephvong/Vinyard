@@ -59,6 +59,7 @@ import Filterlist from "components/Filter/Filterlist.vue"
 import Tabbar from "components/Tabbar/Tabbar.vue"
 import ResultItem from "components/ResultItem/ResultItem.vue"
 
+
 export default {
   name: 'app',
   props:{
@@ -209,7 +210,6 @@ export default {
             this.$nextTick(()=>{
               this.getDataCb(res);
             })
-
           },
           error:(err)=>{
             this.isNoResult=true //没有数据
@@ -273,7 +273,7 @@ export default {
     Tabbar,Popup,Filterlist, ResultItem, Scroller,
   },
   mounted(){
-    //console.log(countryName[this.getUrlParam("country")]);
+
     // 判断页面的scrollTop（是否有记录）
     if(window.localStorage.getItem("scrollTop")){
       $(window).scrollTop(window.localStorage.getItem("scrollTop"))

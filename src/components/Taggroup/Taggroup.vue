@@ -43,6 +43,21 @@ export default {
     },
 
     tagClickHandle(){
+      if(window.localStorage.getItem("selectedObj")){
+        window.localStorage.removeItem("selectedObj")
+      }
+      if(window.localStorage.getItem("fromMenu")){
+        window.localStorage.removeItem("fromMenu")
+      }
+      if(window.localStorage.getItem("resultList")){
+        window.localStorage.removeItem("resultList")
+      }
+      if(window.localStorage.getItem("pageIndex")){
+         window.localStorage.removeItem("pageIndex")
+      }
+      if(window.localStorage.getItem("scrollTop")){
+         window.localStorage.removeItem("scrollTop")
+      }
       let catName = event.target.getAttribute("catalogName");
       let tId = event.target.getAttribute("tId");
       window.localStorage.setItem('selectedObj','{"'+catName+'":"'+tId+'"}') // 设置 本地存储
@@ -101,7 +116,8 @@ export default {
   border-radius:6px;
   overflow: hidden;
   color:#545454;
-  background: white;
+  background: #F3F5F7;
+  /*background: #E5E5E5;*/
 }
 .tag span{
   display: block;

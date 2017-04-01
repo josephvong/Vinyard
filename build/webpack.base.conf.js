@@ -20,9 +20,9 @@ var webpackConfig = {
   },*/
   entry: entries,   // 多入口数组
   output: {
-    path: config.build.assetsRoot,
-    filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
+    path: config.build.assetsRoot, // 生成文件的根目录（指向../dist）
+    filename: '[name].js', //
+    publicPath: process.env.NODE_ENV === 'production'   // publicPath是一个变量，用于给相对路径补全前面的域名（或绝对路径根目录）
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
@@ -68,6 +68,9 @@ var webpackConfig = {
       }
     ]
   },
+  externals:{ // window全局变量的封装
+
+  }
 
 }
 

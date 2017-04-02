@@ -18,9 +18,8 @@
   </div>
 </template>
 
-<script>
-// import tagData from "common/tagData"
-import {countryData} from "country"
+<script> 
+import {countryData} from "countryData"
 import $ from "jquery"
 export default {
   name: 'filterlist',

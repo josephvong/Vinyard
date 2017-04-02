@@ -13,9 +13,8 @@
   </div>
 </template>
 
-<script>
-// import tagData from "common/tagData"
-import {countryData} from "country"
+<script> 
+import {countryData} from "countryData"
 export default {
   name: 'taggroup',
   props:{

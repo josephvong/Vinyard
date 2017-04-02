@@ -49,7 +49,7 @@ import "common/css/reset.css"
 import "common/css/cusstyle.css"
 
 import { Popup, Scroller  } from 'vux'
-import {countryName} from "country"
+import {countryName} from "countryData"
 
 import $ from "jquery"
 import Vue from "vue"

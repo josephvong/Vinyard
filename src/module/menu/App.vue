@@ -5,16 +5,17 @@
     <div class="main-menu">
       <div class="left-menu">
         <ul class="cata-list" ref="cataList">
+
           <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区</li>
           <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒</li>
           <li catalog-type="grape" v-on:click="leftItemClick()">葡萄品种</li>
-          <li  v-on:click="leftItemClick()">价格</li>
+         <!--  <li catalog-type="country" v-on:click="leftItemClick()" >国家</li> -->
           <li  v-on:click="leftItemClick()">综合多选</li>
         </ul>
       </div>
       <div class="right-menu">
-
-        <Taggroup ref="taggroup"></Taggroup>
+        <!-- <div></div> -->
+        <Taggroup ref="taggroup" ></Taggroup>
       </div>
     </div>
   </div>
@@ -34,7 +35,8 @@ export default {
     return {
       country:this.getUrlParam("country"),
       catalogName:catalogTitle["region"],
-      eventHub:new Vue()
+      eventHub:new Vue(),
+      //countrySelect:false
     }
   },
   computed:{
@@ -134,7 +136,7 @@ export default {
     flex-flow:row no-wrap
     justify-content: flex-start
     .left-menu
-      flex: 1 0 8rem
+      flex: 0 0 8rem
       width:8rem
       padding-top:1rem;
       height:100%

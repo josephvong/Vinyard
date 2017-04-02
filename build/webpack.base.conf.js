@@ -33,7 +33,7 @@ var webpackConfig = {
       '@': resolve('src'),
       'common': path.resolve(__dirname, '../src/common'),  // 添加两个别名 common
       'components': path.resolve(__dirname, '../src/components'),   // 添加两个别名 components
-      'country': path.resolve(__dirname, '../src/country'), // 国家数据别名
+      'countryData': path.resolve(__dirname, '../src/countryData'), // 国家数据别名
     }
   },
   module: {

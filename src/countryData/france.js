@@ -2,11 +2,17 @@ const franceData={
 	"region":{
 		title:"地区",
 		list:[
-			{"name_ch":"波尔图","name_en":""},
-			{"name_ch":"马赛","name_en":""},
-			{"name_ch":"里昂","name_en":""},
-			{"name_ch":"圣艾蒂安","name_en":""},
-
+			{"name_ch":"干邑","name_en":"Cognac"},
+			{"name_ch":"香槟","name_en":"Champagne"},
+			{"name_ch":"西南","name_en":"Sud-Ouest"},
+			{"name_ch":"波尔多","name_en":"Bordeaux"},
+			{"name_ch":"罗讷河谷","name_en":"Rhone Valley"},
+			{"name_ch":"普罗旺斯","name_en":"Provence"},
+			{"name_ch":"卢瓦河谷","name_en":"Loire Valley"},
+			{"name_ch":"阿尔萨斯","name_en":"Alsace"},
+			{"name_ch":"汝拉-萨瓦","name_en":"Jura-Savoie"},
+			{"name_ch":"朗格多克-鲁西荣","name_en":"Languedoc-Roussillon"},
+			{"name_ch":"勃艮第丘（勃艮第）","name_en":"Coteaux Bourguignons(Bourgogne)"},
 		]
 	},
 	"wine_type":{

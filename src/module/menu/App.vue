@@ -9,13 +9,13 @@
           <li  class="active" catalog-type="region" v-on:click="leftItemClick()" >产区</li>
           <li catalog-type="wine_type" v-on:click="leftItemClick()">葡萄酒</li>
           <li catalog-type="grape" v-on:click="leftItemClick()">葡萄品种</li>
-         <!--  <li catalog-type="country" v-on:click="leftItemClick()" >国家</li> -->
+          <li catalog-type="country" v-on:click="leftItemClick()" >国家</li>
           <li  v-on:click="leftItemClick()">综合多选</li>
         </ul>
       </div>
       <div class="right-menu">
-        <!-- <div></div> -->
-        <Taggroup ref="taggroup" ></Taggroup>
+        <countrySel v-show="countrySelect"></countrySel>
+        <Taggroup ref="taggroup" v-show="!countrySelect" ></Taggroup>
       </div>
     </div>
   </div>
@@ -28,6 +28,7 @@ import $ from "jquery"
 import Vue from "vue"
 import Banner from "components/Banner/Banner.vue"
 import Taggroup from "components/Taggroup/Taggroup.vue"
+import CountrySel from "components/CountrySel/CountrySel.vue"
 
 export default {
   name: 'app',
@@ -36,7 +37,7 @@ export default {
       country:this.getUrlParam("country"),
       catalogName:catalogTitle["region"],
       eventHub:new Vue(),
-      //countrySelect:false
+      countrySelect:false
     }
   },
   computed:{
@@ -68,7 +69,13 @@ export default {
       $(event.target).addClass("active");
       this.catalogName=catalogTitle[catName];
       if(catName){
-        this.$refs.taggroup.changeCatalogName(catName)
+        if(catName !== "country"){
+          this.countrySelect = false
+          this.$refs.taggroup.changeCatalogName(catName)
+        }else{
+          this.countrySelect = true
+        }
+        
       }else{
         window.localStorage.setItem('fromMenu',"ok"); // 设置 从 menu 页面进入的判定
         window.location.href="/module/info.html?country="+this.country
@@ -82,7 +89,7 @@ export default {
     }
   },
   components:{
-    Banner,Taggroup
+    Banner,Taggroup,CountrySel
   },
   mounted(){
     // 清空 从info页面中 回来时留着的缓存
@@ -169,6 +176,7 @@ export default {
           top:0
           background:red
     .right-menu
+      position relative
       flex: 1 1 auto
       height:100%
       padding:1rem 0rem 0rem 0.8rem;

@@ -49,7 +49,9 @@ Vue.config.productionTip = false
 new Vue({
   render:h=>h(App),
   mounted(){
-
+  	if(!window.localStorage.getItem("userCookie")){
+  		window.location.href = "register.html";
+    }
   }
 }).$mount("#app")
 

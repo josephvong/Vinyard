@@ -82,7 +82,7 @@ export default {
         "authparams":{"app_id":"343535","rtoken":"sldffyy9767","time":1489131067},
         "authmode":"app",
         "country":countryName[this.getUrlParam("country")],// 国家名
-        "cookie":"940158d239561338e"//window.localStorage.getItem("userCookie")
+        "cookie":window.localStorage.getItem("userCookie")//"940158d239561338e"
       },
 
       // 事件集合
@@ -201,7 +201,7 @@ export default {
         });
         let newObj = Object.assign({},this.stableData,formObj,{page:this.pageIndex})
         $.ajax({
-          url:'http://zyshi.9kacha.com/AutoRecommWines/toBfindWine/findWine.php',
+          url:'https://recomm.9kacha.com/toBfindWine/findWine.php',
           type:'POST',
           data:{'jparams':JSON.stringify(newObj) },
           success:(data)=>{

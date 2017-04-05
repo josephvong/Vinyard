@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+<meta charset="UTF-8">
+<title>酒咔嚓B2B搜酒平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0 " />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head>
 <body>
-	<h1>Hello world</h1>
-    <script>
-        //location.href = "module/menu.html?country=italy";
-        location.href = "module/country.html";
-    </script>
+
+<script>
+if(window.localStorage.getItem("userCookie")){
+  window.location.href="module/menu.html?country=italy";
+}else{
+	location.href = "module/register.html";
+}
+//location.href = "module/menu.html?country=italy";
+
+</script>
 </body>
 </html>

@@ -1,20 +1,32 @@
 <template>
   <div class="form-header clearfix">
-    <div class="head-tab active" ctrl="text">填写信息</div>
-    <div class="head-tab" ctrl="file">上传名片</div>
+    <div v-bind:class="{'head-tab':true,'active':isInfo}" ctrl="text" v-on:click="headerClick(true)">填写信息</div>
+    <div v-bind:class="{'head-tab':true,'active':!isInfo}" ctrl="file" v-on:click="headerClick(false)">上传名片</div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Formhead',
+  props:{
+    eventHub:{
+      type:Object,
+    }
+  },
   data(){
     return {
-
+      isInfo:true,
     }
   },
   computed:{
 
+  },
+  methods:{
+    headerClick(flag){
+      this.isInfo = flag;
+      this.eventHub.$emit("switchBody",this.isInfo)
+      return this.isInfo
+    }
   },
   components:{
 
@@ -26,12 +38,12 @@ export default {
 </script>
 
 <style scoped rel="stylesheet/css">
-.form-header{
+.login .form-header{
   width: 100%;
   height:3rem; line-height: 3rem;
 
 }
-.form-header .head-tab{
+.login .form-header .head-tab{
   float: left;
   position: relative;
   width:50%;
@@ -41,9 +53,9 @@ export default {
   background: #B91C36;
   color:white;
 }
-.form-header .head-tab:nth-of-type(1){border-radius: 5px 0 0 0; border-left:1px solid #B91C36; }
-.form-header .head-tab:nth-of-type(2){border-radius:0 5px 0 0;border-right:1px solid #B91C36;}
-.form-header .head-tab.active{
+.login .form-header .head-tab:nth-of-type(1){border-radius: 5px 0 0 0; border-left:1px solid #B91C36; }
+.login .form-header .head-tab:nth-of-type(2){border-radius:0 5px 0 0;border-right:1px solid #B91C36;}
+.login .form-header .head-tab.active{
   background: white;
   color:black;
 }

@@ -2,14 +2,15 @@
   <div class="login main">
     <Banner v-show="true"></Banner>
     <div class="login-form">
-      <Formhead></Formhead>
-      <Formbody></Formbody>
-      <Formfooter></Formfooter>
+      <Formhead v-bind:eventHub="eventHub" ref="formhead"></Formhead>
+      <Formbody  v-bind:eventHub="eventHub" ref="formbody"></Formbody>
+      <Formfooter v-bind:eventHub="eventHub"></Formfooter>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from "Vue"
 import Banner from "../Banner/Banner.vue"
 import Formhead from "./Formhead.vue"
 import Formbody from "./Formbody.vue"
@@ -18,7 +19,7 @@ export default {
   name: 'banner',
   data(){
     return {
-
+      eventHub:new Vue()
     }
   },
   computed:{
@@ -30,8 +31,21 @@ export default {
     Formbody,
     Formfooter
   },
-  mounted(){
+  methods:{
 
+  },
+  mounted(){
+    this.eventHub.$on("switchBody",(flag)=>{
+      this.$refs.formbody.switchBody(flag);
+    })
+
+    this.eventHub.$on("dataSubmit",()=>{
+      this.$refs.formbody.dataSubmit();
+    })
+
+    this.eventHub.$on("headerClick",(flag)=>{
+      this.$refs.formhead.headerClick(flag)
+    })
   }
 }
 </script>
